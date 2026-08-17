@@ -541,6 +541,32 @@ html,body{max-width:100%;overflow-x:hidden}
 @keyframes halaqiShine{0%{left:-65%;opacity:0}20%{opacity:.8}100%{left:118%;opacity:0}}
 @media(prefers-reduced-motion:reduce){.halaqiSplashGlow,.halaqiSplashMark,.halaqiSplashWord,.halaqiSplashTag,.halaqiSplashShine{animation:none!important;opacity:1!important;transform:none!important}#halaqiSplash{transition-duration:.15s}}
 </style>
+
+<style id="halaqi-v83-integrated-css">
+/* ===== Halaqi V8.3 integrated: group booking, real map, payouts, security ===== */
+.h83GroupBox{margin:12px 0;padding:14px;border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));border-radius:19px;background:color-mix(in srgb,var(--gold) 5%,var(--surface))}
+.h83GroupHead{display:flex;align-items:center;justify-content:space-between;gap:12px}.h83GroupHead b{font-size:13px;color:var(--navy)}body.dark .h83GroupHead b{color:#fff}.h83GroupHead small{display:block;color:var(--muted);font-size:9px!important;margin-top:3px}
+.h83Counter{display:flex;align-items:center;gap:7px;direction:ltr}.h83Counter button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-size:19px;font-weight:900}.h83Count{min-width:34px;text-align:center;font-size:17px;font-weight:950;color:var(--gold2)}
+.h83GroupOptions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}.h83GroupOptions span{font-size:10px;font-weight:800;color:var(--text)}
+.h83SimpleSwitch{min-width:88px;min-height:38px;border:1px solid var(--line);border-radius:999px;background:var(--surface2);color:var(--muted);font-size:9px;font-weight:900;padding:7px 11px}.h83SimpleSwitch.on{background:var(--goldSoft);color:var(--gold2);border-color:var(--gold)}
+.h83People{display:grid;gap:8px;margin-top:10px}.h83Person{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px;border-radius:15px;background:var(--surface);border:1px solid var(--line)}.h83Person label{grid-column:1/-1;margin:0!important;font-size:9px!important}.h83Person input,.h83Person select{min-width:0!important}.h83GroupSummary{margin-top:10px;padding:10px 11px;border-radius:13px;background:var(--surface2);font-size:9.5px;line-height:1.7;color:var(--muted)}.h83GroupSummary b{color:var(--text)}
+.h83BusyReason{font-size:7px;display:block;color:var(--red);margin-top:2px}.v77Time.h83Unavailable{opacity:.32!important;text-decoration:line-through!important;pointer-events:none!important}
+
+.h83RealMapShell{margin-top:4px}.h83MapToolbar{display:flex;gap:7px;margin-bottom:8px}.h83MapToolbar button{flex:1;min-height:42px}.h83RealMap{height:min(54vh,430px);min-height:300px;border-radius:22px;border:1px solid var(--line);overflow:hidden;background:var(--surface2);box-shadow:0 12px 30px rgba(8,24,38,.08)}
+.h83MapLegend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:8px;color:var(--muted)}.h83LegendDot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-inline-end:3px}.h83LegendDot.on{background:var(--green)}.h83LegendDot.busy{background:var(--orange)}.h83LegendDot.off{background:#8290a0}
+.h83LeafletMarker{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;background:#0d2138;color:#fff;border:2px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.24);font-size:17px}.h83LeafletMarker.online{outline:3px solid rgba(44,165,111,.45)}.h83LeafletMarker.busy{outline:3px solid rgba(217,149,63,.42)}.h83LeafletMarker.offline{outline:3px solid rgba(130,144,160,.32)}
+.h83MapFallback{height:100%;display:grid;place-items:center;text-align:center;padding:20px;color:var(--muted);font-size:11px;line-height:1.7}
+.leaflet-control-attribution{font-size:7px!important}.leaflet-popup-content{font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","Geeza Pro",Tahoma,sans-serif!important;text-align:right!important;direction:rtl!important;min-width:150px}.h83Popup b{display:block;font-size:12px;margin-bottom:4px}.h83Popup small{display:block;margin-bottom:8px;color:#68727d}.h83Popup button{width:100%;border:0;border-radius:10px;padding:8px;background:#0d2138;color:#fff;font-weight:800}
+
+.h83OwnerPanel,.h83SecurityPanel,.h83LocationPanel{margin-top:10px}.h83PayoutGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.h83PayoutGrid .full{grid-column:1/-1}.h83PayoutPreview{margin-top:9px;padding:11px;border-radius:14px;background:var(--surface2);border:1px dashed var(--line);font-size:9px;line-height:1.7;color:var(--muted)}
+.h83SecurityState{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:color-mix(in srgb,var(--green) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--green) 30%,var(--line))}.h83Shield{width:42px;height:42px;border-radius:14px;background:color-mix(in srgb,var(--green) 14%,var(--surface));display:grid;place-items:center;font-size:20px}.h83SecurityState b{display:block;font-size:11px}.h83SecurityState small{display:block;font-size:8px!important;color:var(--muted);margin-top:3px}
+.h83PaymentCard{padding:12px;border-radius:16px;background:var(--surface2);border:1px solid var(--line);margin-top:8px}.h83PaymentCard b{display:block;font-size:11px}.h83PaymentCard p{font-size:9px!important;color:var(--muted);line-height:1.7;margin:5px 0}
+#h83PaymentModal .modalCard{max-width:390px}
+
+.h83OfficialPill{display:inline-flex;padding:3px 7px;border-radius:999px;background:var(--goldSoft);color:var(--gold2);font-size:8px;font-weight:900;margin-inline-start:5px}
+@media(max-width:390px){.h83Person,.h83PayoutGrid{grid-template-columns:1fr}.h83PayoutGrid .full,.h83Person label{grid-column:1}.h83RealMap{min-height:280px}.h83GroupHead{align-items:flex-start}.h83Counter button{width:36px;height:36px}}
+</style>
+
 </head>
 <body>
 <div id="halaqiSplash" role="status" aria-label="جار فتح تطبيق حلاقي">
@@ -555,14 +581,19 @@ html,body{max-width:100%;overflow-x:hidden}
 
 <div class="desktopNote">حلاقي — تجربة حجز متكاملة<br>على الكمبيوتر تظهر داخل إطار هاتف، وعلى الهاتف تملأ الشاشة تلقائياً.</div>
 <main class="app" id="app">
-<header class="topbar">
- <div class="brand v67Brand halaqiOfficialBrand" aria-label="حلاقي">
-  <div class="brandMark v67BrandMark halaqiOfficialMark"><img src="./halaqi-mark.png" alt="" aria-hidden="true"></div>
-  <div class="v67Wordmark halaqiOfficialWord"><img src="./halaqi-wordmark.png" alt="حلاقي"><span id="brandTitle" class="halaqiBrandTextBridge">حلاقي</span><span id="brandSub" class="halaqiBrandTextBridge"></span></div>
+<header class="topbar halaqiTopbarPro">
+ <div class="halaqiBrandHero brand v67Brand halaqiOfficialBrand" aria-label="حلاقي">
+  <div class="halaqiBrandTextWrap v67Wordmark halaqiOfficialWord">
+   <img class="halaqiHeaderWordmark" src="./halaqi-wordmark.png" alt="حلاقي">
+   <span id="brandTitle" class="halaqiBrandTextBridge">حلاقي</span>
+   <span id="brandSub" class="halaqiBrandSubline">تطبيق حجز مواعيد الحلاقين</span>
+  </div>
+  <div class="halaqiBrandSeal brandMark v67BrandMark halaqiOfficialMark"><img src="./halaqi-mark.png" alt="" aria-hidden="true"></div>
  </div>
- <div class="topActions">
-  <button class="iconBtn" id="roleBtn" title="الحساب" aria-label="الحساب">👤</button>
- </div>
+ <button class="profileDock" id="roleBtn" title="الحساب" aria-label="الحساب">
+  <span class="profileDockIcon">👤</span>
+  <span class="profileDockText">حسابي</span>
+ </button>
 </header>
 
 <!-- CUSTOMER HOME -->
@@ -3332,6 +3363,28 @@ body.dark .directBarberSearch{background:var(--surface)}
 body.dark .directBarberSearch h4{color:#fff!important}
 </style>
 
+
+<style id="halaqi-v82-header-redesign-css">
+.halaqiTopbarPro{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:calc(14px + env(safe-area-inset-top)) 16px 14px!important;min-height:88px!important;background:color-mix(in srgb,var(--surface) 96%,transparent)!important;border-bottom:1px solid color-mix(in srgb,var(--gold) 18%,var(--line))!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+.halaqiBrandHero{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;min-width:0!important;flex:1!important}
+.halaqiBrandSeal{width:58px!important;height:58px!important;min-width:58px!important;border-radius:20px!important;padding:8px!important;background:linear-gradient(145deg,color-mix(in srgb,var(--surface) 84%,white),color-mix(in srgb,var(--surface2) 94%,transparent))!important;border:1px solid color-mix(in srgb,var(--gold) 56%,var(--line))!important;box-shadow:0 10px 24px rgba(16,24,40,.08)!important;display:grid!important;place-items:center!important;overflow:hidden!important}
+.halaqiBrandSeal img,.halaqiBrandSeal .smartMark{width:100%!important;height:100%!important;display:block!important;object-fit:contain!important}
+.halaqiBrandTextWrap{display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:3px!important;min-width:0!important;flex:1!important;height:auto!important}
+.halaqiHeaderWordmark{display:block!important;width:126px!important;max-width:100%!important;height:auto!important;max-height:42px!important;object-fit:contain!important;filter:drop-shadow(0 4px 10px rgba(201,154,66,.18))!important}
+.halaqiBrandSubline{display:block!important;font-size:10px!important;line-height:1.4!important;color:var(--muted)!important;font-weight:700!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#brandWordmarkSmart{display:none!important}
+#brandTitle.halaqiBrandTextBridge{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.halaqiOfficialWord img:not(.halaqiHeaderWordmark){display:none!important}
+.profileDock{display:flex!important;align-items:center!important;gap:8px!important;min-height:52px!important;padding:0 13px!important;border-radius:18px!important;border:1px solid var(--line)!important;background:var(--surface)!important;color:var(--navy)!important;box-shadow:0 8px 22px rgba(13,33,56,.05)!important;flex:none!important}
+.profileDockIcon{width:30px!important;height:30px!important;border-radius:11px!important;background:var(--surface2)!important;display:grid!important;place-items:center!important;font-size:17px!important;line-height:1!important}
+.profileDockText{font-size:12px!important;font-weight:900!important;white-space:nowrap!important}
+#customerHome>.hero{margin-top:10px!important}
+body.dark .halaqiTopbarPro{background:color-mix(in srgb,var(--surface) 94%,transparent)!important;border-bottom-color:color-mix(in srgb,var(--gold) 22%,var(--line))!important}
+body.dark .profileDock{background:var(--surface)!important;color:#f6d181!important;border-color:var(--line)!important}
+body.dark .profileDockIcon{background:rgba(239,209,142,.08)!important}
+body.dark .halaqiBrandSubline{color:#b9c6d3!important}
+@media(max-width:390px){.halaqiTopbarPro{padding-inline:14px!important}.halaqiBrandSeal{width:54px!important;height:54px!important;min-width:54px!important;border-radius:18px!important}.halaqiHeaderWordmark{width:118px!important}.halaqiBrandSubline{font-size:9px!important}.profileDock{width:52px!important;padding:0!important;justify-content:center!important}.profileDockText{display:none!important}}
+</style>
 <script id="halaqi-v71-js">
 (()=>{
  const q=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
@@ -5192,4 +5245,178 @@ body.dark .v77Post{box-shadow:0 16px 42px rgba(0,0,0,.24)!important}
  if(splash){const reduced=matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;const hold=reduced?260:1120;setTimeout(()=>{splash.classList.add('halaqiSplashExit');setTimeout(()=>splash.remove(),reduced?180:380)},hold)}
 })();
 </script>
+
+<script id="halaqi-v82-header-redesign-js">
+(()=>{
+  const syncHeader=()=>{
+    document.querySelectorAll('#brandWordmarkSmart').forEach(el=>el.remove());
+    document.querySelectorAll('.halaqiBrandTextWrap .halaqiBrandSubline,#brandSub').forEach(el=>{
+      el.textContent=document.documentElement.lang==='en'?'Barber appointment booking':'تطبيق حجز مواعيد الحلاقين';
+    });
+    const btn=document.getElementById('roleBtn');
+    const txt=btn?.querySelector('.profileDockText');
+    if(txt) txt.textContent=document.documentElement.lang==='en'?'My account':'حسابي';
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',syncHeader,{once:true});
+  else syncHeader();
+  setTimeout(syncHeader,120);
+  setTimeout(syncHeader,700);
+  setTimeout(syncHeader,1500);
+})();
+</script>
+
+<script id="halaqi-v83-integrated-js">
+(()=>{
+ 'use strict';
+ const q=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
+ document.documentElement.dataset.halaqiVersion='8.3-integrated';
+ const safeSave=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn('[Halaqi save]',e)}};
+ const safeLoad=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch{return d}};
+
+ // ---------- 1) Official De Lusso + Hussein Al-Jawzi migration ----------
+ const DELUSSO_ID='s_delusso', HUSSEIN_ID='b_hussein_aljawzi';
+ const DELUSSO_USER='u_delusso', HUSSEIN_USER='u_hussein_aljawzi';
+ function migrateOfficialEntities(){
+   let salon=salons.find(s=>s.id===DELUSSO_ID);
+   if(!salon){salon={id:DELUSSO_ID,name:'صالون دي لوسو',owner:'حسين الجوزي',bio:'صالون دي لوسو على حلاقي.',rating:0,status:'offline',lat:null,lng:null,gallery:[],members:[HUSSEIN_ID],pending:[],official:true};salons.push(salon)}
+   salon.name='صالون دي لوسو';salon.owner='حسين الجوزي';salon.official=true;salon.members=Array.isArray(salon.members)?salon.members:[];if(!salon.members.includes(HUSSEIN_ID))salon.members.unshift(HUSSEIN_ID);
+   let barber=barbers.find(b=>b.id===HUSSEIN_ID);
+   if(!barber){barber={id:HUSSEIN_ID,name:'حسين الجوزي',phone:'',salonId:DELUSSO_ID,years:0,rating:0,level:'حساب مؤسس',status:'offline',smoking:false,lat:null,lng:null,featuredUntil:0,eventPrice:0,eventBio:'',homePrice:0,horizon:7,schedule:{},official:true};barbers.push(barber)}
+   barber.name='حسين الجوزي';barber.salonId=DELUSSO_ID;barber.official=true;if(!barber.level)barber.level='حساب مؤسس';
+   let su=users.find(u=>u.id===DELUSSO_USER)||users.find(u=>u.role==='salon'&&u.entityId===DELUSSO_ID);
+   if(!su){su={id:DELUSSO_USER,name:'صالون دي لوسو',role:'salon',entityId:DELUSSO_ID,phone:'',lastLogin:0};users.push(su)}
+   su.name='صالون دي لوسو';su.role='salon';su.entityId=DELUSSO_ID;su.username='1';
+   let bu=users.find(u=>u.id===HUSSEIN_USER)||users.find(u=>u.role==='barber'&&u.entityId===HUSSEIN_ID);
+   if(!bu){bu={id:HUSSEIN_USER,name:'حسين الجوزي',role:'barber',entityId:HUSSEIN_ID,phone:'',lastLogin:0};users.push(bu)}
+   bu.name='حسين الجوزي';bu.role='barber';bu.entityId=HUSSEIN_ID;bu.username='313';
+   // Explicit owner grants for reserved short usernames @1 and @313.
+   const key='halaqi_username_grants_v74',g=safeLoad(key,{});
+   g['1']={identity:DELUSSO_USER,approvedAt:g['1']?.approvedAt||Date.now(),approvedBy:'owner',permanent:true};
+   g['313']={identity:HUSSEIN_USER,approvedAt:g['313']?.approvedAt||Date.now(),approvedBy:'owner',permanent:true};safeSave(key,g);
+   persistAll?.();
+ }
+ migrateOfficialEntities();
+
+ // Visually mark official founder records where cards are rendered.
+ const oldBarberHTML=window.barberHTML;
+ if(oldBarberHTML)window.barberHTML=function(b){let html=oldBarberHTML(b);if(b?.id===HUSSEIN_ID)html=html.replace('حسين الجوزي','حسين الجوزي <span class="h83OfficialPill">@313</span>');return html};
+ const oldSalonTopHTML=window.salonTopHTML;
+ if(oldSalonTopHTML)window.salonTopHTML=function(s){let html=oldSalonTopHTML(s);if(s?.id===DELUSSO_ID)html=html.replace('صالون دي لوسو','صالون دي لوسو <span class="h83OfficialPill">@1</span>');return html};
+
+ // ---------- 2) Easy group booking ----------
+ const GROUP_DUR={full:45,hair:30,beard:20,wash:15,facial:25,hairDye:30,beardDye:25,event:60,home:45};
+ let groupState={size:1,custom:false,people:[]};
+ const serviceArabic={full:'حلاقة كاملة',hair:'حلاقة شعر',beard:'ترتيب لحية',wash:'غسل وتصفيف',facial:'تنظيف بشرة',hairDye:'صبغ الشعر',beardDye:'صبغ اللحية',event:'حلاقة مناسبات',home:'حلاقة في المنزل'};
+ const serviceEnglish={full:'Full haircut',hair:'Haircut',beard:'Beard',wash:'Wash & style',facial:'Facial',hairDye:'Hair dye',beardDye:'Beard dye',event:'Occasion grooming',home:'Home service'};
+ const labelService=id=>en()?(serviceEnglish[id]||id):(serviceArabic[id]||services.find(s=>s.id===id)?.name||id);
+ function ensurePeople(){while(groupState.people.length<groupState.size)groupState.people.push({name:'',service:'same'});groupState.people=groupState.people.slice(0,groupState.size)}
+ function ensureGroupUI(){
+   if(q('h83GroupBox'))return;const price=q('priceSummary');if(!price)return;
+   const el=document.createElement('div');el.id='h83GroupBox';el.className='h83GroupBox';price.insertAdjacentElement('beforebegin',el);renderGroupUI();
+ }
+ function serviceOptions(){const ids=['same','full','hair','beard','wash','facial','hairDye','beardDye','event','home'];return ids.map(id=>`<option value="${id}">${id==='same'?(en()?'Same booking services':'نفس خدمات الحجز'):labelService(id)}</option>`).join('')}
+ function renderGroupUI(){const el=q('h83GroupBox');if(!el)return;ensurePeople();
+   el.innerHTML=`<div class="h83GroupHead"><div><b>${en()?'Booking for more than one person':'الحجز لأكثر من شخص'}</b><small>${en()?'One booking, consecutive times, one clear total.':'حجز واحد، أوقات متتالية، ومجموع واضح.'}</small></div><div class="h83Counter"><button type="button" onclick="halaqiGroupStep(-1)">−</button><span class="h83Count">${groupState.size}</span><button type="button" onclick="halaqiGroupStep(1)">＋</button></div></div>${groupState.size>1?`<div class="h83GroupOptions"><span>${en()?'Same services for everyone':'نفس الخدمات للجميع'}</span><button type="button" class="h83SimpleSwitch ${groupState.custom?'':'on'}" onclick="halaqiToggleGroupCustom()">${groupState.custom?(en()?'Customize':'تخصيص'):(en()?'Same':'نفسها')}</button></div><div class="h83People">${groupState.custom?groupState.people.map((p,i)=>`<div class="h83Person"><label>${en()?'Person':'الشخص'} ${i+1}</label><input class="input" maxlength="35" placeholder="${en()?'Name (optional)':'الاسم — اختياري'}" value="${String(p.name||'').replace(/"/g,'&quot;')}" oninput="halaqiSetGroupPerson(${i},'name',this.value)"><select onchange="halaqiSetGroupPerson(${i},'service',this.value)">${serviceOptions().replace(`value="${p.service}"`,`value="${p.service}" selected`)}</select></div>`).join(''):''}</div><div class="h83GroupSummary" id="h83GroupSummary"></div>`:''}`;
+   updateGroupSummary();
+ }
+ window.halaqiGroupStep=function(d){groupState.size=Math.max(1,Math.min(8,groupState.size+d));if(groupState.size===1)groupState.custom=false;ensurePeople();renderGroupUI();window.calculateBooking?.();setTimeout(applyGroupAvailability,0)};
+ window.halaqiToggleGroupCustom=function(){if(groupState.size<2)return;groupState.custom=!groupState.custom;renderGroupUI();window.calculateBooking?.();setTimeout(applyGroupAvailability,0)};
+ window.halaqiSetGroupPerson=function(i,k,v){ensurePeople();if(groupState.people[i])groupState.people[i][k]=k==='name'?String(v).slice(0,35):v;updateGroupSummary();window.calculateBooking?.();setTimeout(applyGroupAvailability,0)};
+ function idsForPerson(i){const p=groupState.people[i];return groupState.custom&&p?.service&&p.service!=='same'?[p.service]:[...(selectedServices.length?selectedServices:['full'])]}
+ function servicePrice(b,id){const s=services.find(x=>x.id===id);if(id==='full')return Number(b?.fullPrice||18000);if(id==='facial')return Number(b?.facialPrice||10000);if(id==='hairDye')return Number(b?.hairDyePrice||12000);if(id==='beardDye')return Number(b?.beardDyePrice||9000);if(id==='event')return Number(b?.eventPrice||0);if(id==='home')return Number(b?.homePrice||0);return Number(s?.price||0)}
+ function personPrice(b,i){return idsForPerson(i).reduce((s,id)=>s+servicePrice(b,id),0)}
+ function personDuration(i){return Math.max(15,idsForPerson(i).reduce((s,id)=>s+(GROUP_DUR[id]||30),0))}
+ function groupTotal(){const b=barbers.find(x=>x.id===q('bookingBarber')?.value)||currentBarber?.();if(!b)return 0;return Array.from({length:groupState.size},(_,i)=>personPrice(b,i)).reduce((a,b)=>a+b,0)}
+ function groupDuration(){return Array.from({length:groupState.size},(_,i)=>personDuration(i)).reduce((a,b)=>a+b,0)}
+ function fmtDuration(m){const h=Math.floor(m/60),r=m%60;return h&&r?`${h} ${en()?'h':'س'} ${r} ${en()?'min':'د'}`:h?`${h} ${en()?'h':'س'}`:`${r} ${en()?'min':'د'}`}
+ function updateGroupSummary(){const el=q('h83GroupSummary');if(!el||groupState.size<2)return;const total=groupTotal(),dur=groupDuration();el.innerHTML=`<b>${groupState.size} ${en()?'people':'أشخاص'}</b> • ${en()?'approx.':'تقريباً'} ${fmtDuration(dur)}<br>${en()?'Total':'الإجمالي'}: <b>${money(total)}</b>${groupState.custom?`<br>${groupState.people.map((p,i)=>`${i+1}. ${p.name|| (en()?'Person':'شخص')+' '+(i+1)} — ${idsForPerson(i).map(labelService).join(' + ')}`).join('<br>')}`:''}`}
+ const baseCalc83=window.calculateBooking;
+ if(baseCalc83)window.calculateBooking=function(){const base=baseCalc83.apply(this,arguments);if(groupState.size>1){const total=groupTotal();const ps=q('priceSummary');if(ps)ps.textContent=`${en()?'Group total':'الإجمالي للمجموعة'}: ${money(total)} • ${groupState.size} ${en()?'people':'أشخاص'}`;updateGroupSummary();return total}return base};
+ function toMin(v){const m=/^(\d{1,2}):(\d{2})$/.exec(String(v||''));return m?Number(m[1])*60+Number(m[2]):0}
+ function timeFromMin(m){m=((m%1440)+1440)%1440;return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`}
+ function bookingDuration(b){return Number(b?.durationMinutes||b?.groupDuration||60)||60}
+ function slotFree(day,start,duration,barberId){const s=toMin(start),e=s+duration;return !bookings.some(b=>b.barberId===barberId&&b.day===day&&s<toMin(b.time)+bookingDuration(b)&&e>toMin(b.time))}
+ function applyGroupAvailability(){if(groupState.size<2)return;const day=q('bookingDay')?.value,bid=q('bookingBarber')?.value,dur=groupDuration();if(!day||!bid)return;document.querySelectorAll('#v77Times .v77Time').forEach(btn=>{const txt=btn.getAttribute('onclick')||'';const m=txt.match(/chooseTimeV77\('([^']+)'\)/);if(!m)return;const free=slotFree(day,m[1],dur,bid);if(!free){btn.disabled=true;btn.classList.add('h83Unavailable');btn.title=en()?'Not enough consecutive time for this group':'لا توجد مدة متصلة كافية لهذه المجموعة'}})}
+ const baseRender83=window.renderScheduleButtonsV77;
+ if(baseRender83)window.renderScheduleButtonsV77=function(){const r=baseRender83.apply(this,arguments);setTimeout(applyGroupAvailability,0);return r};
+ const previousConfirm83=window.confirmBooking;
+ window.__halaqiConfirmAfterAuth=()=>window.confirmBooking();
+ window.confirmBooking=function(){
+   if(groupState.size<=1)return previousConfirm83.apply(this,arguments);
+   if(typeof isCustomerAuthed==='function'&&currentRole==='customer'&&!isCustomerAuthed()){openCustomerAuth?.('booking');return}
+   const b=barbers.find(x=>x.id===q('bookingBarber')?.value);if(!b){toast(en()?'Choose a barber':'اختر الحلاق');return}
+   const day=q('bookingDay')?.value,time=q('bookingTime')?.value,duration=groupDuration();if(!slotFree(day,time,duration,b.id)){toast(en()?'There is not enough consecutive time for this group. Choose another slot.':'لا توجد مدة متصلة كافية للمجموعة. اختر وقتاً آخر.');applyGroupAvailability();return}
+   ensurePeople();const total=groupTotal();const people=groupState.people.map((p,i)=>({name:(p.name||`${en()?'Person':'شخص'} ${i+1}`).trim(),services:idsForPerson(i),durationMinutes:personDuration(i),price:personPrice(b,i)}));
+   let cursor=toMin(time);people.forEach(p=>{p.time=timeFromMin(cursor);cursor+=p.durationMinutes});
+   const detailOpen=!q('bookingDetails')?.classList.contains('hidden');
+   const booking={id:'bk'+Date.now(),customerId:currentCustomerId,barberId:b.id,barber:b.name,salonId:b.salonId||null,salonName:b.salonId?salonName(b.salonId):'حلاق مستقل',services:[...new Set(people.flatMap(p=>p.services))],style:`${en()?'Group booking':'حجز جماعي'} — ${groupState.size} ${en()?'people':'أشخاص'}`,hairLength:detailOpen?q('bookHairLength')?.value:'—',texture:detailOpen?q('bookTexture')?.value:'—',beard:detailOpen?q('bookBeard')?.value:'—',day,time,total,createdAt:Date.now(),reminderSent:false,groupSize:groupState.size,groupDuration:duration,durationMinutes:duration,endTime:timeFromMin(toMin(time)+duration),people};
+   bookings.push(booking);safeSave('halaqi_bookings',bookings);renderSavedBookings?.();renderBarberDashboard?.();renderRepeatBooking?.();track?.('booking');
+   try{autoFavoriteAfterBooking?.();renderRelationshipHub?.()}catch{}
+   const lines=people.map((p,i)=>`${i+1}) ${p.name} — ${p.services.map(labelService).join(' + ')} — ${p.time}`).join('\n');
+   const details=`حجز جماعي من تطبيق حلاقي\nالحلاق: ${b.name}\nعدد الأشخاص: ${groupState.size}\nاليوم: ${day}\nالبداية: ${time}\nالنهاية التقريبية: ${booking.endTime}\n\n${lines}\n\nالإجمالي: ${money(total)}`;
+   const phone=typeof normalizeIraqPhone==='function'?normalizeIraqPhone(b.phone||salons.find(s=>s.id===b.salonId)?.phone||''):'';const url=phone?`https://wa.me/${phone}?text=${encodeURIComponent(details)}`:`https://wa.me/?text=${encodeURIComponent(details)}`;
+   toast(en()?'Group booking saved':'تم تثبيت الحجز الجماعي');try{tactile?.([18,30,18])}catch{};window.open(url,'_blank','noopener');
+   groupState={size:1,custom:false,people:[]};renderGroupUI();setTimeout(()=>window.renderScheduleButtonsV77?.(),0)
+ };
+ const baseSaved83=window.renderSavedBookings||renderSavedBookings;
+ window.renderSavedBookings=function(){const r=baseSaved83.apply(this,arguments);document.querySelectorAll('#savedBookings .loginRow').forEach((row,i)=>{const b=[...bookings].reverse()[i];if(b?.groupSize>1){const badge=row.querySelector('.badge');if(badge)badge.textContent=`${b.groupSize} ${en()?'people':'أشخاص'}`}});return r};
+
+ // ---------- 3) Owner payout method ----------
+ const PAYOUT_KEY='halaqi_owner_payout_v83';
+ const payout=()=>safeLoad(PAYOUT_KEY,{method:'',provider:'',recipient:'',account:'',note:'',shareWithProfessionals:true});
+ function ensurePayoutPanel(){const host=q('developerHome');if(!host||q('h83OwnerPanel'))return;const el=document.createElement('div');el.id='h83OwnerPanel';el.className='formCard h83OwnerPanel';el.innerHTML=`<h3>${en()?'Profit receiving method':'طريقة استلام الأرباح'}</h3><p style="color:var(--muted);font-size:9px!important;line-height:1.7">${en()?'Configure the owner payout destination here. No API keys or passwords are stored.':'اضبط هنا وسيلة استلام أرباحك. لا نخزن كلمات مرور أو مفاتيح API في هذه الخانة.'}</p><div class="h83PayoutGrid"><div><label>${en()?'Type':'النوع'}</label><select id="h83PayMethod"><option value="wallet">${en()?'E-wallet':'محفظة إلكترونية'}</option><option value="bank">${en()?'Bank account':'حساب بنكي'}</option><option value="transfer">${en()?'Transfer number':'رقم تحويل'}</option><option value="other">${en()?'Other':'أخرى'}</option></select></div><div><label>${en()?'Provider / label':'الجهة / الاسم'}</label><input class="input" id="h83PayProvider" maxlength="50" placeholder="مثال: اسم المحفظة"></div><div><label>${en()?'Recipient':'اسم المستلم'}</label><input class="input" id="h83PayRecipient" maxlength="60"></div><div><label>${en()?'Number / account':'الرقم / الحساب'}</label><input class="input" id="h83PayAccount" maxlength="80" inputmode="text"></div><div class="full"><label>${en()?'Instructions':'ملاحظة للمحوّل'}</label><textarea id="h83PayNote" maxlength="250" placeholder="${en()?'Optional instructions':'تعليمات اختيارية'}"></textarea></div></div><div class="h83GroupOptions"><span>${en()?'Show payment instructions to professionals when needed':'عرض تعليمات الدفع للحلاقين عند الحاجة'}</span><button class="h83SimpleSwitch" id="h83PayShare" onclick="this.classList.toggle('on')"></button></div><button class="primary" style="width:100%;margin-top:9px" onclick="halaqiSavePayout()">${en()?'Save payout method':'حفظ وسيلة الاستلام'}</button><div class="h83PayoutPreview" id="h83PayoutPreview"></div>`;host.appendChild(el);loadPayoutForm()}
+ function loadPayoutForm(){const p=payout();if(!q('h83PayMethod'))return;q('h83PayMethod').value=p.method||'wallet';q('h83PayProvider').value=p.provider||'';q('h83PayRecipient').value=p.recipient||'';q('h83PayAccount').value=p.account||'';q('h83PayNote').value=p.note||'';q('h83PayShare').classList.toggle('on',p.shareWithProfessionals!==false);renderPayoutPreview()}
+ function renderPayoutPreview(){const p=payout(),el=q('h83PayoutPreview');if(!el)return;el.innerHTML=p.account?`<b>${p.provider|| (en()?'Configured payout':'وسيلة الاستلام')}</b><br>${p.recipient||''}${p.recipient?'<br>':''}${p.account}${p.note?'<br>'+p.note:''}`:(en()?'No payout destination saved yet.':'لم تحفظ وسيلة استلام بعد.')}
+ window.halaqiSavePayout=function(){const p={method:q('h83PayMethod')?.value||'other',provider:(q('h83PayProvider')?.value||'').trim(),recipient:(q('h83PayRecipient')?.value||'').trim(),account:(q('h83PayAccount')?.value||'').trim(),note:(q('h83PayNote')?.value||'').trim(),shareWithProfessionals:q('h83PayShare')?.classList.contains('on')!==false,updatedAt:Date.now()};safeSave(PAYOUT_KEY,p);renderPayoutPreview();toast(en()?'Payout method saved':'تم حفظ وسيلة استلام الأرباح')};
+ function ensurePaymentModal(){if(q('h83PaymentModal'))return;const el=document.createElement('div');el.id='h83PaymentModal';el.className='modal';el.innerHTML=`<div class="modalCard"><div class="grab"></div><div class="modalHead"><div><h2>${en()?'Payment details':'بيانات الدفع'}</h2><small>${en()?'Owner payout destination':'وسيلة الاستلام المعتمدة'}</small></div><button class="close" onclick="closeModal('h83PaymentModal')">×</button></div><div class="h83PaymentCard" id="h83PaymentBody"></div><button class="primary" style="width:100%;margin-top:9px" onclick="halaqiCopyPayout()">${en()?'Copy details':'نسخ البيانات'}</button></div>`;document.body.appendChild(el)}
+ window.halaqiCopyPayout=function(){const p=payout(),t=[p.provider,p.recipient,p.account,p.note].filter(Boolean).join('\n');navigator.clipboard?.writeText(t).then(()=>toast(en()?'Copied':'تم النسخ')).catch(()=>toast(t))};
+ function showPayoutIfConfigured(){const p=payout();if(!p.account||p.shareWithProfessionals===false)return;ensurePaymentModal();q('h83PaymentBody').innerHTML=`<b>${p.provider|| (en()?'Payment method':'وسيلة الدفع')}</b><p>${p.recipient||''}${p.recipient?'<br>':''}${p.account}${p.note?'<br>'+p.note:''}</p>`;q('h83PaymentModal').classList.add('show')}
+ const baseFeatured83=window.requestFeatured;
+ if(baseFeatured83)window.requestFeatured=function(){const n=featuredRequests.length,r=baseFeatured83.apply(this,arguments);if(featuredRequests.length>n)setTimeout(showPayoutIfConfigured,120);return r};
+
+ // ---------- 4) Security hardening suitable for the current static PWA ----------
+ const SEC_KEY='halaqi_security_v83',MAX_IDLE=20*60*1000;let lastActivity=Date.now();
+ function secState(){return safeLoad(SEC_KEY,{failed:0,lockedUntil:0,lastLock:0})}
+ function saveSec(s){safeSave(SEC_KEY,s)}
+ function touch(){lastActivity=Date.now();if(currentRole==='developer')sessionStorage.setItem('halaqi_dev_last_activity',String(lastActivity))}
+ ['pointerdown','keydown','touchstart'].forEach(ev=>addEventListener(ev,touch,{passive:true}));
+ const oldOpenDev=window.openDeveloperGate||openDeveloperGate;
+ window.openDeveloperGate=function(){const s=secState();if(Date.now()<s.lockedUntil){toast(en()?'Security lock is active. Try later.':'الحماية أوقفت المحاولات مؤقتاً. حاول لاحقاً.');return}return oldOpenDev.apply(this,arguments)};
+ const oldUnlockDev=window.unlockDeveloper||unlockDeveloper;
+ window.unlockDeveloper=async function(){const before=sessionStorage.getItem('halaqi_dev_unlocked');const s=secState();if(Date.now()<s.lockedUntil){toast('محاولات كثيرة — حاول لاحقاً');return}await oldUnlockDev.apply(this,arguments);const ok=sessionStorage.getItem('halaqi_dev_unlocked')==='1';if(ok){s.failed=0;s.lockedUntil=0;touch()}else if(before!=='1'){s.failed=(s.failed||0)+1;if(s.failed>=5){s.failed=0;s.lockedUntil=Date.now()+2*60*1000}s.lastLock=Date.now()}saveSec(s);renderSecurityPanel()};
+ function forceDeveloperLock(msg){if(currentRole!=='developer')return;sessionStorage.removeItem('halaqi_dev_unlocked');sessionStorage.removeItem('halaqi_dev_last_activity');currentRole='customer';localStorage.setItem('halaqi_role','customer');try{renderAll?.();showScreen?.('customerHome',false)}catch{};const s=secState();s.lastLock=Date.now();saveSec(s);if(msg)toast(msg);renderSecurityPanel()}
+ setInterval(()=>{if(currentRole==='developer'){const t=Number(sessionStorage.getItem('halaqi_dev_last_activity')||lastActivity);if(Date.now()-t>MAX_IDLE)forceDeveloperLock(en()?'Developer session locked for inactivity.':'تم قفل جلسة المطور بسبب عدم النشاط.')}},60000);
+ addEventListener('storage',e=>{if(e.key==='halaqi_role'&&e.newValue==='developer'&&sessionStorage.getItem('halaqi_dev_unlocked')!=='1'){localStorage.setItem('halaqi_role','customer')}});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&currentRole==='developer'){const t=Number(sessionStorage.getItem('halaqi_dev_last_activity')||0);if(t&&Date.now()-t>MAX_IDLE)forceDeveloperLock(en()?'Developer session locked.':'تم قفل جلسة المطور.')}});
+ function ensureSecurityPanel(){const host=q('developerHome');if(!host||q('h83SecurityPanel'))return;const el=document.createElement('div');el.id='h83SecurityPanel';el.className='formCard h83SecurityPanel';el.innerHTML='<h3>حماية التطبيق</h3><div class="h83SecurityState"><span class="h83Shield">◈</span><span><b id="h83SecurityTitle"></b><small id="h83SecurityText"></small></span></div>';host.appendChild(el);renderSecurityPanel()}
+ function renderSecurityPanel(){const s=secState(),t=q('h83SecurityTitle'),d=q('h83SecurityText');if(!t||!d)return;t.textContent=en()?'Protection active':'الحماية مفعلة';d.textContent=en()?'Developer gate + attempt throttling + 20-minute inactivity lock + role tamper protection.':'بوابة المطور + إبطاء المحاولات + قفل بعد 20 دقيقة خمول + منع تفعيل دور المطور بالتلاعب البسيط.'}
+ // Never accept a persisted developer role without a live unlocked session.
+ if(localStorage.getItem('halaqi_role')==='developer'&&sessionStorage.getItem('halaqi_dev_unlocked')!=='1'){localStorage.setItem('halaqi_role','customer');if(currentRole==='developer')currentRole='customer'}
+
+ // ---------- 5) Real interactive OpenStreetMap ----------
+ let map83=null,layer83=null,userMarker83=null,leafletPromise=null;
+ function ensureMapShell(){const old=document.querySelector('#mapScreen .map');if(old&&!q('h83RealMap')){const shell=document.createElement('div');shell.className='h83RealMapShell';shell.innerHTML=`<div class="h83MapToolbar"><button class="primary" onclick="halaqiUseMyLocation()">⌖ ${en()?'My location':'موقعي الآن'}</button><button class="secondary" onclick="halaqiFitAllMap()">${en()?'Show all':'عرض الكل'}</button></div><div id="h83RealMap" class="h83RealMap"><div class="h83MapFallback">${en()?'Loading real map…':'جارٍ تحميل الخارطة الحقيقية…'}</div></div><div class="h83MapLegend"><span><i class="h83LegendDot on"></i>${en()?'Available':'متاح'}</span><span><i class="h83LegendDot busy"></i>${en()?'Busy':'مشغول'}</span><span><i class="h83LegendDot off"></i>${en()?'Offline':'غير متاح'}</span><span>© OpenStreetMap</span></div>`;old.replaceWith(shell)}}
+ function loadLeaflet(){if(window.L)return Promise.resolve(window.L);if(leafletPromise)return leafletPromise;leafletPromise=new Promise((resolve,reject)=>{let css=document.querySelector('link[data-h83-leaflet]');if(!css){css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';css.integrity='sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';css.crossOrigin='';css.dataset.h83Leaflet='1';document.head.appendChild(css)}const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.integrity='sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';s.crossOrigin='';s.async=true;s.onload=()=>resolve(window.L);s.onerror=reject;document.head.appendChild(s)});return leafletPromise}
+ function statusClass(s){return s==='online'?'online':s==='busy'?'busy':'offline'}
+ function iconFor(type,status){return L.divIcon({className:'',html:`<div class="h83LeafletMarker ${statusClass(status)}">${type==='salon'?'💈':'✂'}</div>`,iconSize:[38,38],iconAnchor:[19,36],popupAnchor:[0,-36]})}
+ function validCoord(e){return Number.isFinite(Number(e?.lat))&&Number.isFinite(Number(e?.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180&&!(Number(e.lat)===0&&Number(e.lng)===0)}
+ function popupHTML(type,e){const handle=type==='salon'&&e.id===DELUSSO_ID?'@1':type==='barber'&&e.id===HUSSEIN_ID?'@313':'';return `<div class="h83Popup"><b>${String(e.name||'').replace(/[<>]/g,'')} ${handle}</b><small>${type==='salon'?(en()?'Salon':'صالون'):(en()?'Barber':'حلاق')} • ${e.status==='online'?(en()?'Available':'متاح'):e.status==='busy'?(en()?'Busy':'مشغول'):(en()?'Offline':'غير متاح')}</small><button onclick="openPublicProfile('${type}','${e.id}')">${en()?'Open profile':'فتح الصفحة'}</button></div>`}
+ async function renderRealMap(){ensureMapShell();const host=q('h83RealMap');if(!host)return;try{await loadLeaflet();if(!map83){host.innerHTML='';map83=L.map(host,{zoomControl:true}).setView([33.3152,44.3661],12);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map83);layer83=L.layerGroup().addTo(map83)}layer83.clearLayers();const bounds=[];salons.filter(validCoord).forEach(s=>{L.marker([Number(s.lat),Number(s.lng)],{icon:iconFor('salon',s.status)}).bindPopup(popupHTML('salon',s)).addTo(layer83);bounds.push([Number(s.lat),Number(s.lng)])});barbers.filter(validCoord).forEach(b=>{L.marker([Number(b.lat),Number(b.lng)],{icon:iconFor('barber',b.status)}).bindPopup(popupHTML('barber',b)).addTo(layer83);bounds.push([Number(b.lat),Number(b.lng)])});if(Number.isFinite(geo?.lat)&&Number.isFinite(geo?.lng)){if(userMarker83)userMarker83.remove();userMarker83=L.circleMarker([geo.lat,geo.lng],{radius:8,weight:3,color:'#fff',fillColor:'#387cf2',fillOpacity:1}).addTo(map83).bindPopup(en()?'Your location':'موقعك');bounds.push([geo.lat,geo.lng])}setTimeout(()=>map83.invalidateSize(),60);if(bounds.length&&map83.getZoom()<=12)map83.fitBounds(bounds,{padding:[28,28],maxZoom:14})}catch(err){host.innerHTML=`<div class="h83MapFallback"><div>${en()?'Could not load the map. Check the connection and retry.':'تعذر تحميل الخارطة. تحقق من الإنترنت ثم أعد المحاولة.'}<br><button class="secondary" style="margin-top:10px" onclick="renderHalaqiRealMap()">${en()?'Retry':'إعادة المحاولة'}</button></div></div>`;console.warn('[Halaqi map]',err)}}
+ window.renderHalaqiRealMap=renderRealMap;
+ window.halaqiUseMyLocation=function(){if(!navigator.geolocation){toast(en()?'Location is not supported.':'الموقع غير مدعوم على هذا الجهاز.');return}navigator.geolocation.getCurrentPosition(p=>{geo.lat=p.coords.latitude;geo.lng=p.coords.longitude;renderRealMap().then(()=>map83?.setView([geo.lat,geo.lng],15));toast(en()?'Location updated':'تم تحديث موقعك')},()=>toast(en()?'Location permission was not granted.':'لم يتم السماح بالوصول إلى الموقع.'),{enableHighAccuracy:true,timeout:12000,maximumAge:30000})};
+ window.halaqiFitAllMap=function(){if(!map83||!layer83)return;const ls=layer83.getLayers().filter(x=>x.getLatLng);if(userMarker83)ls.push(userMarker83);if(ls.length)map83.fitBounds(L.featureGroup(ls).getBounds(),{padding:[25,25],maxZoom:14})};
+ function ensureLocationPanel(){const host=q('developerManage');if(!host||q('h83LocationPanel'))return;const el=document.createElement('div');el.id='h83LocationPanel';el.className='formCard h83LocationPanel';el.innerHTML=`<h3>موقع صالون دي لوسو</h3><p style="font-size:9px!important;color:var(--muted);line-height:1.7">لن نضع موقعاً تقديرياً. عندما تكون داخل الصالون اضغط الزر لتسجيل إحداثياته الحقيقية من GPS، وتُستخدم للحلاق حسين الجوزي أيضاً.</p><button class="primary" style="width:100%" onclick="halaqiSetDelussoLocation()">⌖ تعيين موقع دي لوسو من موقعي الحالي</button><div id="h83DelussoLoc" class="h83PayoutPreview"></div>`;host.appendChild(el);renderDelussoLoc()}
+ function renderDelussoLoc(){const s=salons.find(x=>x.id===DELUSSO_ID),el=q('h83DelussoLoc');if(!el)return;el.textContent=validCoord(s)?`تم تحديد الموقع: ${Number(s.lat).toFixed(5)}, ${Number(s.lng).toFixed(5)}`:'الموقع لم يُحدد بعد.'}
+ window.halaqiSetDelussoLocation=function(){if(!navigator.geolocation){toast('الموقع غير مدعوم');return}navigator.geolocation.getCurrentPosition(p=>{const s=salons.find(x=>x.id===DELUSSO_ID),b=barbers.find(x=>x.id===HUSSEIN_ID);if(s){s.lat=p.coords.latitude;s.lng=p.coords.longitude}if(b){b.lat=p.coords.latitude;b.lng=p.coords.longitude}persistAll?.();renderDelussoLoc();renderRealMap();toast('تم حفظ الموقع الحقيقي لدي لوسو')},()=>toast('لم يتم السماح بالموقع'),{enableHighAccuracy:true,timeout:12000,maximumAge:0})};
+
+ // ---------- Integration lifecycle ----------
+ const previousShow83=window.showScreen;
+ if(previousShow83)window.showScreen=function(id,push=true){const r=previousShow83.apply(this,arguments);if(id==='booking')setTimeout(()=>{ensureGroupUI();renderGroupUI();applyGroupAvailability()},0);if(id==='mapScreen')setTimeout(renderRealMap,50);if(id==='developerHome')setTimeout(()=>{ensurePayoutPanel();ensureSecurityPanel()},0);if(id==='developerManage')setTimeout(ensureLocationPanel,0);return r};
+ const previousAll83=window.renderAll;
+ if(previousAll83)window.renderAll=function(){const r=previousAll83.apply(this,arguments);setTimeout(()=>{migrateOfficialEntities();ensureGroupUI();if(q('developerHome')?.classList.contains('active')){ensurePayoutPanel();ensureSecurityPanel()}if(q('developerManage')?.classList.contains('active'))ensureLocationPanel();if(q('mapScreen')?.classList.contains('active'))renderRealMap()},0);return r};
+ function init83(){migrateOfficialEntities();ensureGroupUI();ensureMapShell();ensurePaymentModal();if(q('developerHome')?.classList.contains('active')){ensurePayoutPanel();ensureSecurityPanel()}if(q('developerManage')?.classList.contains('active'))ensureLocationPanel();renderOnlineBarbers?.();renderGroupUI()}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init83,{once:true});else init83();setTimeout(init83,650);
+})();
+</script>
+
 </body></html>
