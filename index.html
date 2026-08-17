@@ -569,9 +569,8 @@ html,body{max-width:100%;overflow-x:hidden}
 
 
 <style id="halaqi-v833-fixes-css">
-/* Halaqi V8.3.3 — collected UX, map, registration and security fixes */
+/* Halaqi V8.4.0 Clean Core — UX, map, registration and security; no global gesture hacks */
 html,body,#app,.app,.screen{max-width:100%!important;overflow-x:hidden!important}
-.screen{touch-action:pan-y!important}
 #swipeEdgeHint,.swipeEdgeHint{display:none!important}
 .swipePhysicsPreview,.swipePhysicsShade{display:none!important;pointer-events:none!important}
 
@@ -581,13 +580,9 @@ html,body,#app,.app,.screen{max-width:100%!important;overflow-x:hidden!important
 .h832BrandCopy small{margin-top:0!important;font-size:7.2px!important;line-height:1.15!important;letter-spacing:0!important;opacity:.92!important}
 @media(max-width:390px){.h832Brand{transform:translateX(-7px)!important}.h832BrandCopy small{font-size:6.8px!important}}
 
-/* Keep the four customer shortcuts stable instead of disappearing after navigation. */
-body.h833Customer .h832QuickDock.isHidden{display:grid!important}
-body:not(.h833Customer) .h832QuickDock{display:none!important}
 
 /* The menu must always sit above Leaflet panes. */
 .h832MenuShade{z-index:5000!important}.h832Menu{z-index:5001!important}
-body.h833MenuOpen .leaflet-container{pointer-events:none!important}
 
 /* Hero uses a clean barbershop photo only; all branding/text is HTML above it. */
 #customerHome>.hero{
@@ -1311,7 +1306,7 @@ function showScreen(id,push=true){
  const cur=$('.screen.active'); if(push&&cur&&cur.id!==id){let h=LS('halaqi_history',[]);h.push(cur.id);save('halaqi_history',h.slice(-20))}
  const swap=()=>{$$('.screen').forEach(s=>s.classList.toggle('active',s.id===id));updateNavActive(id)};
  swap();
- track('screen:'+id);window.scrollTo({top:0,left:0,behavior:'auto'});
+ track('screen:'+id);window.scrollTo({top:0,behavior:'smooth'});
  if(push&&id!==homeForRole())showSwipeHint();
  if(id==='smartMatch')setTimeout(renderSmartMatch,20);
  if(id==='explore')setTimeout(setupVoiceSearch,20)
@@ -1324,18 +1319,10 @@ function openCurrentAccount(){
  else if(currentRole==='salon')showScreen('salonAccount');
  else showScreen('developerAccount');
 }
-$('#roleBtn').onclick=openCurrentAccount;
+const roleBtnLegacy=$('#roleBtn');if(roleBtnLegacy)roleBtnLegacy.onclick=openCurrentAccount;
 
-// Edge swipe navigation disabled in V8.3.4 for stable touch navigation on iPhone.
-let swipeStartX=0,swipeStartY=0,swipeTracking=false;
-function showSwipeHint(){
- if(localStorage.getItem('halaqi_swipe_hint'))return;
- const el=$('#swipeEdgeHint');if(!el)return;
- const en=document.documentElement.lang==='en';
- el.textContent=en?'Swipe from the left edge to go back':'للرجوع اسحب من حافة اليمين إلى اليسار';
- el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600);
- localStorage.setItem('halaqi_swipe_hint','1')
-}
+// V8.4 Clean Core: app-level edge swipe removed.
+function showSwipeHint(){}
 
 const navs={
  customer:[['customerHome','⌂','الرئيسية'],['explore','◉','استكشف'],['booking','✂','احجز'],['customerProfile','◌','حسابي']],
@@ -2055,7 +2042,7 @@ function applyLanguage(){
  v66Translating=true;
  document.documentElement.lang=lang;document.documentElement.dir=lang==='en'?'ltr':'rtl';
  const ls=$('#langSwitch');if(ls)ls.classList.toggle('on',lang==='en');
- $('#brandTitle').textContent=d.brand;$('#brandSub').textContent=d.sub;
+ const brandTitleLegacy=$('#brandTitle'),brandSubLegacy=$('#brandSub');if(brandTitleLegacy)brandTitleLegacy.textContent=d.brand;if(brandSubLegacy)brandSubLegacy.textContent=d.sub;
  $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(d[k])el.innerHTML=d[k]});
  rememberArabicSource();renderLanguage(lang);updateSwipeGuide();
  const ib=$('#installAppBtn');if(ib)ib.textContent=lang==='en'?'Install Halaqi':'تثبيت حلاقي';
@@ -2290,6 +2277,7 @@ track('open');renderAll();showScreen(homeForRole(),false);detectLocation();autom
   const tb=document.getElementById('v67TopBarbers');if(tb)tb.innerHTML=[...barbers].sort((a,b)=>b.rating-a.rating).slice(0,4).map(barberHTML).join('');
   const ts=document.getElementById('v67TopSalons');if(ts)ts.innerHTML=[...salons].sort((a,b)=>b.rating-a.rating).slice(0,3).map(salonTopHTML).join('');
  }
+ window.buildHomeRanking=buildHomeRanking;
  function salonTopHTML(s){return `<article class="topSalonCard"><div class="avatar"><img class="avatarImg" src="${s.avatar}" alt=""></div><div><h3>${esc(s.name)}</h3><p>★ ${s.rating||'—'} • ${s.status==='online'?(isEn()?'Available now':'متاح الآن'):(isEn()?'Busy':'مشغول')} • ${s.members?.length||0} ${isEn()?'barbers':'حلاقين'}</p></div><button class="secondary" onclick="openPublicProfile('salon','${s.id}')">${isEn()?'Profile':'الصفحة'}</button></article>`}
 
  // Public profile, follow, social links and profile photos.
@@ -2570,6 +2558,7 @@ body.dark .relationshipCard,body.dark .addonStrip{background:var(--surface)}
    renderQuickAddons();
    renderBookingRelationship();
  }
+ window.ensureBookingRelationship=ensureBookingRelationship;
  window.renderQuickAddons=function(){
    const el=q('addonChoices');if(!el)return;
    const items=[
@@ -2901,6 +2890,7 @@ body.dark .travelRec{background:var(--surface)}body.dark .travelRec b{color:#fff
  }
  function maybeAskHomeProvince(){
    if(homeProvince())return;
+   if(!q('customerHome')?.classList.contains('active'))return;
    const cp=currentProvince()||'بغداد';const s=q('homeProvinceFirst');if(s)s.value=cp;
    q('homeProvinceModal')?.classList.add('show')
  }
@@ -3358,9 +3348,8 @@ body.dark .searchSelectResults button{color:#fff!important}
      n.innerHTML=(sets[currentRole]||sets.barber).map((x,i)=>`<button class="navBtn ${i===0?'active':''}" data-screen="${x[0]}" onclick="showScreen('${x[0]}')"><span style="font-size:20px">${x[1]}</span>${x[2]}</button>`).join('')
    }
  };
+  // V8.4 Clean Core: V7.0 global edge-swipe navigation removed; native taps/scroll only.
 
- // V8.3.4: both-edge app swipe navigation disabled.
- let edgeStart=null;
 
  function updateSwipeCopy(){
    const title=q('swipeGuideTitle'),copy=q('swipeGuideText');
@@ -4602,352 +4591,9 @@ body.dark .shortHandleNotice b{color:#fff!important}
 </script>
 
 
-<style id="halaqi-v76-css">
-/* V7.6 — physically smooth, vertically-stable edge swipe */
-html.swipePhysicsLock,
-html.swipePhysicsLock body{
-  overscroll-behavior:none!important;
-}
-html.swipePhysicsCommitting::view-transition-old(root),
-html.swipePhysicsCommitting::view-transition-new(root){
-  animation:none!important;
-}
-.swipePhysicsPreview{
-  position:fixed;
-  inset:0;
-  z-index:28;
-  overflow:hidden;
-  pointer-events:none;
-  background:var(--bg);
-  contain:paint;
-  transform:translateZ(0);
-}
-.swipePhysicsPreviewInner{
-  position:absolute;
-  inset-inline:0;
-  top:0;
-  width:100%;
-  min-height:100%;
-  will-change:transform,opacity;
-  transform:translate3d(0,0,0);
-}
-.swipePhysicsPreview .screen{
-  display:block!important;
-  opacity:1!important;
-  visibility:visible!important;
-  pointer-events:none!important;
-  min-height:100dvh!important;
-  background:var(--bg)!important;
-}
-.screen.swipePhysicsCurrent{
-  position:relative!important;
-  z-index:32!important;
-  will-change:transform,border-radius,box-shadow;
-  transform-origin:center center!important;
-  backface-visibility:hidden!important;
-  -webkit-backface-visibility:hidden!important;
-  contain:paint;
-}
-body.swipePhysicsActive .bottomNav{
-  transform:translateZ(0)!important;
-}
-.swipePhysicsShade{
-  position:fixed;
-  inset:0;
-  z-index:31;
-  pointer-events:none;
-  background:rgba(3,14,25,.18);
-  opacity:0;
-  will-change:opacity;
-}
-@media (prefers-reduced-motion: reduce){
-  .screen.swipePhysicsCurrent,
-  .swipePhysicsPreviewInner{
-    transition:none!important;
-  }
-}
-</style>
 
-<script id="halaqi-v76-js">
-(()=>{
- const q=id=>document.getElementById(id);
- const nativeScrollTo=window.scrollTo.bind(window);
- const POS_KEY='halaqi_screen_scroll_v76';
- let gesture=null, physicsCommitting=false, springFrame=0;
 
- function readPositions(){
-   try{return JSON.parse(sessionStorage.getItem(POS_KEY)||'{}')||{}}catch{return {}}
- }
- function savePosition(id,y){
-   if(!id)return;
-   const map=readPositions();map[id]=Math.max(0,Math.round(y||0));
-   sessionStorage.setItem(POS_KEY,JSON.stringify(map))
- }
- function getPosition(id){return Number(readPositions()[id]||0)}
 
- function readHistory(){
-   try{return JSON.parse(localStorage.getItem('halaqi_history')||'[]')||[]}catch{return []}
- }
- function writeHistory(h){localStorage.setItem('halaqi_history',JSON.stringify(h.slice(-20)))}
- function roleHome(){
-   return currentRole==='barber'?'barberHome':
-          currentRole==='salon'?'salonHome':
-          currentRole==='developer'?'developerHome':'customerHome'
- }
- function destination(){
-   const h=readHistory();
-   return {id:h.length?h[h.length-1]:roleHome(),hasHistory:h.length>0}
- }
-
- function modalOpen(){
-   return !!document.querySelector('.modal.show,.modal.open,[role="dialog"].show')
- }
- function sanitizeClone(root){
-   if(root.id)root.removeAttribute('id');
-   root.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
-   root.querySelectorAll('script,iframe,video,audio').forEach(el=>el.remove());
-   root.querySelectorAll('input,textarea,select,button,a').forEach(el=>el.setAttribute('tabindex','-1'));
-   return root
- }
-
- function lockBody(y){
-   const b=document.body;
-   const prior={
-     position:b.style.position,top:b.style.top,left:b.style.left,right:b.style.right,
-     width:b.style.width,overflow:b.style.overflow,touchAction:b.style.touchAction
-   };
-   b.style.position='fixed';
-   b.style.top=`-${y}px`;
-   b.style.left='0';
-   b.style.right='0';
-   b.style.width='100%';
-   b.style.overflow='hidden';
-   b.style.touchAction='none';
-   document.documentElement.classList.add('swipePhysicsLock');
-   document.body.classList.add('swipePhysicsActive');
-   return prior
- }
- function unlockBody(prior,y){
-   const b=document.body;
-   Object.assign(b.style,prior||{});
-   document.documentElement.classList.remove('swipePhysicsLock','swipePhysicsCommitting');
-   document.body.classList.remove('swipePhysicsActive');
-   nativeScrollTo({top:Math.max(0,y||0),left:0,behavior:'auto'})
- }
-
- function buildPreview(targetId,targetY,side){
-   const target=document.getElementById(targetId);
-   if(!target)return null;
-   const outer=document.createElement('div');outer.className='swipePhysicsPreview';
-   const inner=document.createElement('div');inner.className='swipePhysicsPreviewInner';
-   const clone=sanitizeClone(target.cloneNode(true));
-   clone.classList.add('active');
-   inner.appendChild(clone);outer.appendChild(inner);
-   document.body.appendChild(outer);
-
-   // Freeze destination at its own remembered vertical position.
-   inner.style.top=`-${Math.max(0,targetY)}px`;
-   inner.style.paddingTop=`${Math.max(0,targetY)}px`;
-   const dir=side==='left'?1:-1;
-   inner.style.transform=`translate3d(${-dir*20}px,0,0) scale(.985)`;
-   inner.style.opacity='.78';
-   return {outer,inner}
- }
- function buildShade(){
-   const s=document.createElement('div');s.className='swipePhysicsShade';
-   document.body.appendChild(s);return s
- }
-
- function setVisual(g,x){
-   g.pos=x;
-   const w=Math.max(320,innerWidth);
-   const p=Math.max(0,Math.min(1,Math.abs(x)/w));
-   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-   const scale=reduce?1:(1-.010*p);
-   const radius=reduce?0:(18*p);
-   const shadow=reduce?'none':`${-g.dir*18*p}px 0 ${34*p}px rgba(2,13,23,${(0.22*p).toFixed(3)})`;
-
-   g.current.style.transform=`translate3d(${x}px,0,0) scale(${scale})`;
-   g.current.style.borderRadius=`${radius}px`;
-   g.current.style.boxShadow=shadow;
-
-   if(g.preview){
-     const px=-g.dir*20*(1-p);
-     const ps=reduce?1:(.985+.015*p);
-     g.preview.inner.style.transform=`translate3d(${px}px,0,0) scale(${ps})`;
-     g.preview.inner.style.opacity=String(.78+.22*p)
-   }
-   if(g.shade)g.shade.style.opacity=String(.16*(1-p))
- }
- function dragMap(distance,width){
-   const d=Math.max(0,distance),limit=width*.96;
-   if(d<=limit)return d;
-   return limit+(d-limit)*.16
- }
- function springTo(g,target,initialVelocity,onDone){
-   cancelAnimationFrame(springFrame);
-   let x=g.pos||0,v=initialVelocity||0,last=performance.now();
-   const k=235,c=31;
-   function step(now){
-     const dt=Math.min(.024,Math.max(.001,(now-last)/1000));last=now;
-     const a=-k*(x-target)-c*v;
-     v+=a*dt;x+=v*dt;
-     setVisual(g,x);
-     if(Math.abs(target-x)<.55&&Math.abs(v)<7){
-       setVisual(g,target);onDone?.();return
-     }
-     springFrame=requestAnimationFrame(step)
-   }
-   springFrame=requestAnimationFrame(step)
- }
-
- function beginHorizontal(g){
-   if(g.locked)return;
-   g.locked=true;
-   g.current.classList.add('swipePhysicsCurrent');
-   g.bodyPrior=lockBody(g.scrollY);
-   g.preview=buildPreview(g.targetId,g.targetY,g.side);
-   g.shade=buildShade();
-   setVisual(g,0)
- }
- function cleanup(g,restoreY){
-   cancelAnimationFrame(springFrame);
-   if(g.current){
-     g.current.classList.remove('swipePhysicsCurrent');
-     g.current.style.transform='';
-     g.current.style.borderRadius='';
-     g.current.style.boxShadow='';
-     g.current.style.willChange=''
-   }
-   g.preview?.outer?.remove();
-   g.shade?.remove();
-   unlockBody(g.bodyPrior,restoreY);
-   gesture=null
- }
-
- function swapWithoutScroll(targetId){
-   const realScroll=window.scrollTo;
-   let reassigned=false;
-   try{window.scrollTo=()=>{};reassigned=true}catch{}
-   document.documentElement.classList.add('swipePhysicsCommitting');
-   try{window.showScreen(targetId,false)}
-   finally{
-     if(reassigned)window.scrollTo=realScroll;
-   }
- }
-
- function completeBack(g){
-   const h=readHistory();
-   if(g.hasHistory)h.pop();
-   writeHistory(h);
-   physicsCommitting=true;
-
-   // Keep both pages vertically frozen while the actual DOM swaps beneath the finished gesture.
-   swapWithoutScroll(g.targetId);
-
-   physicsCommitting=false;
-   cleanup(g,g.targetY);
-
-   // Two-frame correction cancels any delayed smooth scroll left by legacy navigation code.
-   requestAnimationFrame(()=>nativeScrollTo({top:g.targetY,left:0,behavior:'auto'}));
-   requestAnimationFrame(()=>requestAnimationFrame(()=>nativeScrollTo({top:g.targetY,left:0,behavior:'auto'})));
-   try{navigator.vibrate?.(7)}catch{}
- }
-
- function cancelBack(g){
-   springTo(g,0,-g.velocityPxS*.18,()=>cleanup(g,g.scrollY))
- }
-
- function start(e){
-   if(e.touches.length!==1||modalOpen())return;
-   const t=e.touches[0],w=innerWidth;
-   let side=null;
-   if(t.clientX<=40)side='left';
-   else if(t.clientX>=w-40)side='right';
-   if(!side)return;
-
-   const cur=document.querySelector('.screen.active');
-   if(!cur)return;
-   const dest=destination();
-   if(dest.id===cur.id&&!dest.hasHistory)return;
-
-   // We own edge gestures before older document-level handlers see them.
-   e.stopImmediatePropagation();
-
-   savePosition(cur.id,window.scrollY);
-   gesture={
-     side,dir:side==='left'?1:-1,
-     x0:t.clientX,y0:t.clientY,lastX:t.clientX,lastT:performance.now(),
-     velocityPxS:0,locked:false,cancelled:false,current:cur,pos:0,
-     scrollY:window.scrollY,targetId:dest.id,targetY:getPosition(dest.id),hasHistory:dest.hasHistory,
-     preview:null,shade:null,bodyPrior:null
-   }
- }
- function move(e){
-   const g=gesture;if(!g||e.touches.length!==1)return;
-   const t=e.touches[0],dx=t.clientX-g.x0,dy=t.clientY-g.y0;
-   const inward=g.dir*dx;
-   const ax=Math.abs(dx),ay=Math.abs(dy);
-
-   e.stopImmediatePropagation();
-
-   if(!g.locked){
-     if(ay>12&&ay>ax*1.12){g.cancelled=true;gesture=null;return}
-     if(inward>8&&ax>ay*1.18)beginHorizontal(g);
-     else return
-   }
-
-   e.preventDefault();
-
-   const now=performance.now(),dt=Math.max(8,now-g.lastT);
-   const rawV=(t.clientX-g.lastX)/dt*1000;
-   g.velocityPxS=g.velocityPxS*.68+rawV*.32;
-   g.lastX=t.clientX;g.lastT=now;
-
-   const mapped=dragMap(inward,Math.max(320,innerWidth));
-   setVisual(g,g.dir*mapped)
- }
- function end(e){
-   const g=gesture;if(!g)return;
-   e.stopImmediatePropagation();
-   if(!g.locked){gesture=null;return}
-
-   const t=e.changedTouches?.[0],dx=t?t.clientX-g.x0:g.dir*Math.abs(g.pos);
-   const inward=Math.max(0,g.dir*dx);
-   const p=inward/Math.max(320,innerWidth);
-   const inwardV=g.dir*g.velocityPxS;
-   const finish=p>.27||inwardV>480;
-
-   if(finish){
-     const target=g.dir*(innerWidth+28);
-     springTo(g,target,g.velocityPxS,()=>completeBack(g))
-   }else cancelBack(g)
- }
- function cancel(){
-   const g=gesture;if(!g)return;
-   if(g.locked)cancelBack(g);else gesture=null
- }
-
- // V8.3.4: physics edge-swipe listeners intentionally disabled.
- // Navigation is button-driven only; this prevents stale body locks and random page changes on iOS.
-
- // Remember per-screen vertical positions whenever normal navigation occurs.
- const previousShow=window.showScreen;
- window.showScreen=function(id,push=true){
-   if(!physicsCommitting){
-     const cur=document.querySelector('.screen.active');
-     if(cur)savePosition(cur.id,window.scrollY)
-   }
-   return previousShow(id,push)
- };
-
- function init(){
-   const cur=document.querySelector('.screen.active');if(cur&&!Object.hasOwn(readPositions(),cur.id))savePosition(cur.id,window.scrollY);
-   document.documentElement.dataset.halaqiVersion='7.6'
- }
- setTimeout(init,100);
-})();
-</script>
 
 <style id="halaqi-v77-css">
 /* ===== V7.7 — booking picker, premium Explore, identity & dark contrast ===== */
@@ -5627,46 +5273,16 @@ body.dark .h832Topbar{background:rgba(13,26,42,.97)!important;border-bottom-colo
 (()=>{
  'use strict';
  const byId=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
- document.documentElement.dataset.halaqiVersion='8.3.4';
+ document.documentElement.dataset.halaqiVersion='8.4.0';
  const validCoord=e=>Number.isFinite(Number(e?.lat))&&Number.isFinite(Number(e?.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180&&!(Number(e.lat)===0&&Number(e.lng)===0);
  const esc833=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  const hash833=async v=>{if(window.crypto?.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}return 'local-'+btoa(unescape(encodeURIComponent(v))).slice(0,80)};
 
- // -------- Header and stable shortcuts --------
- function syncRole833(){document.body.classList.toggle('h833Customer',typeof currentRole==='undefined'||currentRole==='customer')}
- syncRole833();
- const previousShow833=window.showScreen;
- if(typeof previousShow833==='function')window.showScreen=function(id,push=true){
-   cleanupSwipe833();
-   const r=previousShow833.apply(this,arguments);
-   syncRole833();
-   if(id==='customerHome')setTimeout(()=>{ensureHomeMap833();renderHomeMap833()},60);
-   return r
- };
- const previousRenderAll833=window.renderAll;
- if(typeof previousRenderAll833==='function')window.renderAll=function(){const r=previousRenderAll833.apply(this,arguments);syncRole833();syncBarberSalonCoords833();setTimeout(()=>{ensureHomeMap833();if(byId('customerHome')?.classList.contains('active'))renderHomeMap833()},50);return r};
-
- // -------- Remove unstable edge-swipe navigation --------
- function cleanupSwipe833(){
-   document.documentElement.classList.remove('swipePhysicsLock','swipePhysicsCommitting');
-   document.body.classList.remove('swipePhysicsActive');
-   document.querySelectorAll('.swipePhysicsPreview,.swipePhysicsShade').forEach(x=>x.remove());
- }
- cleanupSwipe833();
- // V8.3.4: no app-level edge gesture interception. iOS/browser gestures remain native.
- let edgeBlock833=false;
-
- // -------- Side menu: remove redundant map shortcut and keep map below overlay --------
- const oldToggleMenu833=window.toggleH832Menu;
- window.toggleH832Menu=function(open){
-   if(typeof oldToggleMenu833==='function')oldToggleMenu833(!!open);
-   document.body.classList.toggle('h833MenuOpen',!!open);
- };
+ // -------- V8.4 Clean Core: features only, no global click/touch/navigation interception --------
  function cleanSideMenu833(){
    const mapLabel=document.querySelector('[data-h832-m3]');mapLabel?.closest('button')?.remove();
-   const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.3.4';
+   const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.4.0';
  }
-
  // -------- Linked barbers inherit salon coordinates and never need their own map point --------
  function syncBarberSalonCoords833(){
    let changed=false;
@@ -5785,312 +5401,13 @@ body.dark .h832Topbar{background:rgba(13,26,42,.97)!important;border-bottom-colo
  window.halaqiChangePassword833=async function(){const u=currentUser833(),err=byId('h833PasswordError'),fail=m=>{if(err){err.textContent=m;err.classList.add('show')}};if(!u?.passwordHash){fail(en()?'Secure verification is required.':'يلزم تحقق آمن.');return}const old=byId('h833OldPassword').value,n1=byId('h833NewPassword').value,n2=byId('h833NewPassword2').value;if(await hash833(old)!==u.passwordHash){fail(en()?'Current password is incorrect.':'كلمة المرور الحالية غير صحيحة.');return}if(n1.length<8){fail(en()?'Use at least 8 characters.':'استخدم 8 أحرف على الأقل.');return}if(n1!==n2){fail(en()?'New passwords do not match.':'كلمتا المرور الجديدتان غير متطابقتين.');return}u.passwordHash=await hash833(n1);save('halaqi_users',users);closeModal('h833ChangePasswordModal');if(currentRole==='customer')localStorage.removeItem('halaqi_customer_authenticated');currentRole='customer';localStorage.setItem('halaqi_role','customer');renderAll();showScreen('customerHome',false);toast(en()?'Password changed. Sign in again.':'تم تغيير كلمة المرور. سجّل الدخول من جديد.')};
  function ensureSettingsSecurity833(){const host=byId('appSettings');if(!host||byId('h833PasswordPanel'))return;const el=document.createElement('div');el.id='h833PasswordPanel';el.className='formCard h833PasswordPanel';el.innerHTML=`<h3>${en()?'Account security':'أمان الحساب'}</h3><p style="font-size:9px!important;color:var(--muted);line-height:1.6">${en()?'Password changes require your current password. Forgot-password recovery never changes an account without server verification.':'تغيير كلمة المرور يتطلب الحالية. واستعادة المنسية لا تغيّر الحساب بدون تحقق خادمي.'}</p><button class="secondary" style="width:100%" onclick="halaqiOpenChangePassword833()">${en()?'Change password':'تغيير كلمة المرور'}</button>`;host.appendChild(el)}
 
- function init833(){cleanSideMenu833();prepareRegFields833();syncRole833();syncBarberSalonCoords833();ensureSettingsSecurity833();ensureHomeMap833();if(byId('customerHome')?.classList.contains('active'))setTimeout(renderHomeMap833,120);cleanupSwipe833()}
+ function init833(){
+   cleanSideMenu833();prepareRegFields833();syncBarberSalonCoords833();ensureSettingsSecurity833();ensureHomeMap833();
+   const home=byId('customerHome');
+   if(home&&!home.dataset.h840MapObserver){home.dataset.h840MapObserver='1';new MutationObserver(()=>{if(home.classList.contains('active'))setTimeout(renderHomeMap833,80)}).observe(home,{attributes:true,attributeFilter:['class']})}
+   if(home?.classList.contains('active'))setTimeout(renderHomeMap833,120)
+ }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init833,{once:true});else init833();setTimeout(init833,500);setTimeout(init833,1400);
-})();
-</script>
-
-
-
-<style id="halaqi-v836-booking-rootfix-css">
-/* V8.3.6 — root interaction model: native taps, no global gesture/capture guards. */
-.screen:not(.active){display:none!important;pointer-events:none!important}
-.screen.active{display:block!important;pointer-events:auto!important;touch-action:auto!important}
-.screen.active button,.screen.active a,.screen.active input,.screen.active select,.screen.active textarea,.screen.active [onclick]{pointer-events:auto!important}
-#bottomNav,#bottomNav button,.h832Topbar,.h832Topbar button,.h832QuickDock,.h832QuickDock button{pointer-events:auto!important}
-.h832MenuShade:not(.show),.h832Menu:not(.show){pointer-events:none!important}
-.h832MenuShade.show,.h832Menu.show{pointer-events:auto!important}
-.modal:not(.show){pointer-events:none!important}
-.modal.show{pointer-events:auto!important}
-#halaqiSplash.halaqiSplashExit{pointer-events:none!important}
-.swipePhysicsPreview,.swipePhysicsShade{display:none!important;pointer-events:none!important}
-</style>
-<script id="halaqi-v836-booking-rootfix-js">
-(()=>{
- 'use strict';
- const one=s=>document.querySelector(s), all=s=>[...document.querySelectorAll(s)];
- function clearRetiredGestureState836(){
-   document.documentElement.classList.remove('swipePhysicsLock','swipePhysicsCommitting');
-   document.body.classList.remove('swipePhysicsActive');
-   all('.swipePhysicsPreview,.swipePhysicsShade').forEach(el=>el.remove());
-   all('.swipePhysicsCurrent').forEach(el=>{el.classList.remove('swipePhysicsCurrent');el.style.transform='';el.style.borderRadius='';el.style.boxShadow='';el.style.willChange=''});
-   const b=document.body;
-   if(b.style.touchAction==='none')b.style.touchAction='';
-   if(b.style.position==='fixed')b.style.position='';
-   if(b.style.overflow==='hidden'&&!one('.modal.show')&&!one('#h832Menu.show'))b.style.overflow='';
-   if(b.style.top&&/^-/i.test(b.style.top))b.style.top='';
-   if(b.style.left==='0px'||b.style.left==='0')b.style.left='';
-   if(b.style.right==='0px'||b.style.right==='0')b.style.right='';
-   if(b.style.width==='100%')b.style.width='';
- }
- function closeDeadLayers836(){
-   const menu=one('#h832Menu'),shade=one('#h832MenuShade');
-   if(!menu?.classList.contains('show')){menu?.classList.remove('show');shade?.classList.remove('show');document.body.classList.remove('h833MenuOpen')}
-   all('.modal').forEach(m=>{
-     // Remove only inline pointer locks left by the retired V8.3.5 guard; CSS controls state now.
-     if(m.style.getPropertyValue('pointer-events'))m.style.removeProperty('pointer-events');
-   });
- }
- function normalize836(){
-   clearRetiredGestureState836();closeDeadLayers836();
-   all('.screen').forEach(sc=>{sc.style.removeProperty('pointer-events')});
-   const nav=one('#bottomNav');if(nav){nav.style.removeProperty('pointer-events');nav.querySelectorAll('button').forEach(b=>b.style.removeProperty('pointer-events'))}
- }
- normalize836();
- const previousOpen836=window.openBooking;
- if(typeof previousOpen836==='function'){
-   window.openBooking=function(){
-     normalize836();
-     // A booking transition must never inherit an open menu/modal.
-     all('.modal.show').forEach(m=>m.classList.remove('show'));
-     one('#h832Menu')?.classList.remove('show');one('#h832MenuShade')?.classList.remove('show');document.body.classList.remove('h833MenuOpen');
-     const r=previousOpen836.apply(this,arguments);
-     normalize836();
-     requestAnimationFrame(()=>{
-       normalize836();
-       const booking=one('#booking');if(booking?.classList.contains('active'))booking.style.removeProperty('pointer-events');
-       const nav=one('#bottomNav');if(nav)nav.style.removeProperty('pointer-events');
-     });
-     return r;
-   };
- }
- // Keep ordinary screen navigation clean, but do not intercept pointer/touch/click events globally.
- const previousShow836=window.showScreen;
- if(typeof previousShow836==='function'){
-   window.showScreen=function(){
-     normalize836();const r=previousShow836.apply(this,arguments);normalize836();return r;
-   };
- }
- document.documentElement.dataset.halaqiVersion='8.3.6';
- const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.3.6';
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalize836,{once:true});
-})();
-</script>
-
-
-
-<style id="halaqi-v837-booking-flow-css">
-/* V8.3.7 — explicit booking flow: choose -> schedule -> confirm -> success. */
-.v837BookingProgress{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:5px 0 12px}
-.v837Step{display:flex;align-items:center;justify-content:center;gap:6px;min-height:39px;padding:7px 8px;border:1px solid var(--line);border-radius:13px;background:var(--surface2);color:var(--muted);font-size:9px;font-weight:850;transition:.18s}
-.v837Step i{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--muted) 12%,var(--surface));font-style:normal;font-size:8px}
-.v837Step.active{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:var(--goldSoft);color:var(--navy)}
-.v837Step.done{color:var(--navy)}.v837Step.done i{background:var(--gold);color:#102033}
-body.dark .v837Step.active,body.dark .v837Step.done{color:#fff}
-#v77BookingPicker.v837Picked .v77PickerHead,#v77BookingPicker.v837Picked .v77PickerSearch,#v77BookingPicker.v837Picked .v77EntityGrid{display:none!important}
-#v77BookingPicker.v837Picked{margin-bottom:8px}
-#v77ChosenBarber.v837ChosenReady{display:grid!important;grid-template-columns:auto 1fr auto;align-items:center}
-.v837ChangeBarber{border:1px solid var(--line);background:var(--surface);color:var(--navy);border-radius:11px;min-height:34px;padding:5px 9px;font-size:8px;font-weight:850;white-space:nowrap}
-body.dark .v837ChangeBarber{color:#fff}
-#v77Schedule.v837Waiting{display:none!important}
-#v77Schedule.v837Ready{display:block!important;animation:v837Rise .18s ease both}
-@keyframes v837Rise{from{opacity:.35;transform:translateY(7px)}to{opacity:1;transform:none}}
-.confirmOneTap.v837Locked{opacity:.48;filter:saturate(.55)}
-.v837ConfirmHint{display:none;margin:8px 0 3px;padding:10px 12px;border-radius:13px;background:var(--goldSoft);color:var(--navy);font-size:9px;font-weight:800;text-align:center}
-.v837ConfirmHint.show{display:block}
-#v837BookingSuccess .modalCard{max-width:420px}
-.v837SuccessIcon{width:72px;height:72px;border-radius:24px;margin:0 auto 12px;display:grid;place-items:center;background:linear-gradient(145deg,#efd18e,#d3a44c);color:#102033;font-size:34px;box-shadow:0 14px 30px rgba(211,164,76,.25)}
-.v837Success{text-align:center}.v837Success h2{margin:0;color:var(--navy);font-size:22px}.v837Success p{margin:6px 0 13px;color:var(--muted);font-size:10px!important;line-height:1.65}
-.v837Receipt{padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface2);text-align:start;margin:10px 0}.v837Receipt b{display:block;color:var(--navy);font-size:12px}.v837Receipt small{display:block;color:var(--muted);font-size:9px!important;line-height:1.7;margin-top:4px}
-body.dark .v837Success h2,body.dark .v837Receipt b{color:#fff}
-.v837SuccessActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.v837SuccessActions button{min-height:48px}
-@media(max-width:370px){.v837Step{font-size:8px;padding:6px 4px}.v837Step i{display:none}.v837SuccessActions{grid-template-columns:1fr}}
-</style>
-
-<div class="modal" id="v837BookingSuccess">
- <div class="modalCard">
-  <div class="grab"></div>
-  <div class="v837Success">
-   <div class="v837SuccessIcon">✓</div>
-   <h2 id="v837SuccessTitle">تم تثبيت الحجز</h2>
-   <p id="v837SuccessSub">حُفظ الموعد داخل حلاقي ويمكنك الرجوع إليه من حسابك.</p>
-  </div>
-  <div class="v837Receipt" id="v837SuccessReceipt"></div>
-  <div class="v837SuccessActions">
-   <button class="secondary" type="button" onclick="v837OpenMyBookings()">عرض مواعيدي</button>
-   <button class="primary" type="button" id="v837WhatsAppBtn" onclick="v837OpenWhatsApp()">إرسال عبر واتساب</button>
-  </div>
-  <button class="textBtn" style="width:100%;margin-top:10px" type="button" onclick="closeModal('v837BookingSuccess')">إغلاق</button>
- </div>
-</div>
-
-<script id="halaqi-v837-booking-flow-js">
-(()=>{
- 'use strict';
- const q=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
- const HOME_KEY='halaqi_home_province';
- let explicitTime837=false,lastWa837='',provincePrompted837=false;
- function activeScreen837(){return document.querySelector('.screen.active')?.id||''}
- function ensureProgress837(){
-   const card=document.querySelector('#booking .v67BookingCard');if(!card)return;
-   if(!q('v837BookingProgress')){
-     const p=document.createElement('div');p.id='v837BookingProgress';p.className='v837BookingProgress';
-     p.innerHTML=`<div class="v837Step active" data-step="1"><i>1</i><span>${en()?'Barber':'الحلاق'}</span></div><div class="v837Step" data-step="2"><i>2</i><span>${en()?'Time':'الموعد'}</span></div><div class="v837Step" data-step="3"><i>3</i><span>${en()?'Confirm':'التأكيد'}</span></div>`;
-     card.insertBefore(p,card.firstChild)
-   }
-   if(!q('v837ConfirmHint')){
-     const h=document.createElement('div');h.id='v837ConfirmHint';h.className='v837ConfirmHint';h.textContent=en()?'Choose a time to enable confirmation.':'اختر الوقت أولاً لتفعيل التأكيد.';
-     q('priceSummary')?.insertAdjacentElement('afterend',h)
-   }
- }
- function setStep837(n){
-   ensureProgress837();document.querySelectorAll('#v837BookingProgress .v837Step').forEach(el=>{const s=Number(el.dataset.step);el.classList.toggle('active',s===n);el.classList.toggle('done',s<n)});
-   const confirm=q('booking .confirmOneTap')||document.querySelector('#booking .confirmOneTap');
-   if(confirm)confirm.classList.toggle('v837Locked',!explicitTime837)
- }
- function decorateChosen837(){
-   const c=q('v77ChosenBarber');if(!c||c.classList.contains('hidden'))return;
-   c.classList.add('v837ChosenReady');if(!c.querySelector('.v837ChangeBarber')){const b=document.createElement('button');b.type='button';b.className='v837ChangeBarber';b.textContent=en()?'Change':'تغيير';b.onclick=window.v837ChangeBarber;c.appendChild(b)}
- }
- function showSchedule837(scroll=true){
-   const picker=q('v77BookingPicker'),sch=q('v77Schedule');picker?.classList.add('v837Picked');decorateChosen837();
-   if(sch){sch.classList.remove('v837Waiting');sch.classList.add('v837Ready');if(scroll)setTimeout(()=>sch.scrollIntoView({behavior:'smooth',block:'start'}),60)}
-   setStep837(2)
- }
- window.v837ChangeBarber=function(){
-   const picker=q('v77BookingPicker'),sch=q('v77Schedule');picker?.classList.remove('v837Picked');sch?.classList.remove('v837Ready');sch?.classList.add('v837Waiting');explicitTime837=false;setStep837(1);setTimeout(()=>picker?.scrollIntoView({behavior:'smooth',block:'start'}),30)
- };
- function beginBooking837(){
-   ensureProgress837();explicitTime837=false;setStep837(1);
-   q('v77BookingPicker')?.classList.remove('v837Picked');q('v77Schedule')?.classList.add('v837Waiting');q('v77Schedule')?.classList.remove('v837Ready');
-   q('v837ConfirmHint')?.classList.remove('show');
-   // Never let the unrelated first-run province sheet interrupt an active booking.
-   q('homeProvinceModal')?.classList.remove('show')
- }
- const oldOpen=window.openBooking;
- if(typeof oldOpen==='function')window.openBooking=function(){const r=oldOpen.apply(this,arguments);setTimeout(beginBooking837,0);setTimeout(beginBooking837,80);return r};
- const oldSalonOpen=window.openSalonBooking;
- if(typeof oldSalonOpen==='function')window.openSalonBooking=function(){const r=oldSalonOpen.apply(this,arguments);setTimeout(beginBooking837,0);return r};
- const oldSelect=window.selectBarberV77;
- if(typeof oldSelect==='function')window.selectBarberV77=function(){const r=oldSelect.apply(this,arguments);explicitTime837=false;setTimeout(()=>showSchedule837(true),0);return r};
- const oldDay=window.chooseDayV77;
- if(typeof oldDay==='function')window.chooseDayV77=function(){const r=oldDay.apply(this,arguments);explicitTime837=false;setStep837(2);q('v837ConfirmHint')?.classList.add('show');return r};
- const oldTime=window.chooseTimeV77;
- if(typeof oldTime==='function')window.chooseTimeV77=function(){const r=oldTime.apply(this,arguments);explicitTime837=true;setStep837(3);q('v837ConfirmHint')?.classList.remove('show');setTimeout(()=>q('priceSummary')?.scrollIntoView({behavior:'smooth',block:'center'}),70);return r};
-
- // Keep the home-governorate setup useful but never let it hijack booking/explore screens.
- const province=q('homeProvinceModal');
- if(province){new MutationObserver(()=>{if(province.classList.contains('show')&&!['customerHome','appSettings'].includes(activeScreen837()))province.classList.remove('show')}).observe(province,{attributes:true,attributeFilter:['class']})}
- const oldSaveProvince=window.saveHomeProvinceFirst;
- window.saveHomeProvinceFirst=function(){if(typeof oldSaveProvince==='function')oldSaveProvince.apply(this,arguments);q('homeProvinceModal')?.classList.remove('show');provincePrompted837=true;try{toast(en()?'Home governorate saved':'تم حفظ محافظة السكن')}catch{}};
- function maybePromptProvince837(){if(localStorage.getItem(HOME_KEY)||provincePrompted837||activeScreen837()!=='customerHome')return;provincePrompted837=true;setTimeout(()=>{if(activeScreen837()==='customerHome'&&!localStorage.getItem(HOME_KEY))q('homeProvinceModal')?.classList.add('show')},500)}
- const oldShow=window.showScreen;
- if(typeof oldShow==='function')window.showScreen=function(id){if(id!=='customerHome'&&id!=='appSettings')q('homeProvinceModal')?.classList.remove('show');const r=oldShow.apply(this,arguments);if(id==='customerHome')maybePromptProvince837();return r};
-
- function bookingText837(bk){
-   const serviceNames=(bk.services||[]).map(id=>{try{return services.find(s=>s.id===id)?.name||id}catch{return id}}).join(' + ');
-   return `${en()?'Barber':'الحلاق'}: ${bk.barber}\n${en()?'Day':'اليوم'}: ${bk.day}\n${en()?'Time':'الوقت'}: ${bk.time}\n${en()?'Service':'الخدمة'}: ${serviceNames||'—'}\n${en()?'Total':'الإجمالي'}: ${typeof money==='function'?money(bk.total):bk.total}`
- }
- function success837(bk,wa){
-   lastWa837=wa||'';const title=q('v837SuccessTitle'),sub=q('v837SuccessSub'),rec=q('v837SuccessReceipt'),wb=q('v837WhatsAppBtn');
-   if(title)title.textContent=en()?'Booking confirmed':'تم تثبيت الحجز';if(sub)sub.textContent=en()?'Your appointment is saved in Halaqi.':'حُفظ الموعد داخل حلاقي ويمكنك الرجوع إليه من حسابك.';
-   if(rec)rec.innerHTML=`<b>${String(bk.barber||'')}</b><small>${String(bk.day||'')} • ${String(bk.time||'')}<br>${en()?'Total':'الإجمالي'}: ${typeof money==='function'?money(bk.total):bk.total}</small>`;
-   if(wb)wb.style.display=lastWa837?'block':'none';q('v837BookingSuccess')?.classList.add('show')
- }
- window.v837OpenWhatsApp=function(){if(lastWa837)window.open(lastWa837,'_blank','noopener')};
- window.v837OpenMyBookings=function(){q('v837BookingSuccess')?.classList.remove('show');showScreen('customerProfile');setTimeout(()=>q('savedBookings')?.scrollIntoView({behavior:'smooth',block:'center'}),80)};
- const oldConfirm=window.confirmBooking;
- if(typeof oldConfirm==='function')window.confirmBooking=function(){
-   const barber=q('bookingBarber')?.value,day=q('bookingDay')?.value,time=q('bookingTime')?.value;
-   if(!barber){try{toast(en()?'Choose a barber first':'اختر الحلاق أولاً')}catch{};v837ChangeBarber();return}
-   if(!day||!time||!explicitTime837){try{toast(en()?'Choose the day and time first':'اختر اليوم والوقت أولاً')}catch{};showSchedule837(true);q('v837ConfirmHint')?.classList.add('show');return}
-   const before=Array.isArray(bookings)?bookings.length:0,realOpen=window.open;let captured='';
-   window.open=function(url){captured=String(url||'');return null};
-   let r;try{r=oldConfirm.apply(this,arguments)}finally{window.open=realOpen}
-   const after=Array.isArray(bookings)?bookings.length:0;
-   if(after>before){const bk=bookings[bookings.length-1];success837(bk,captured);explicitTime837=false;setStep837(1)}
-   return r
- };
-
- function init837(){ensureProgress837();if(activeScreen837()==='booking')beginBooking837();else maybePromptProvince837();document.documentElement.dataset.halaqiVersion='8.3.7';const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.3.7'}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init837,{once:true});else init837();setTimeout(init837,700)
-})();
-</script>
-
-
-
-<style id="halaqi-v838-quick-booking-control-css">
-/* V8.3.8 — deterministic quick-booking controls for iPhone/Safari. */
-#booking .v77Entity,#booking .addonChip,#booking .v77Day,#booking .v77Time,#booking .confirmOneTap,#v77SalonPickerModal button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(211,164,76,.16)}
-#v77BookingPicker.v838Schedule .v77PickerHead,#v77BookingPicker.v838Schedule .v77PickerSearch,#v77BookingPicker.v838Schedule .v77EntityGrid{display:none!important}
-#v77BookingPicker.v838Schedule{margin-bottom:8px}
-#v77Schedule.v838Visible{display:block!important;opacity:1!important;pointer-events:auto!important}
-</style>
-<script id="halaqi-v838-quick-booking-control-js">
-(()=>{
- 'use strict';
- const q=id=>document.getElementById(id);
- const oldSelect838=window.selectBarberV77;
- let handledAt838=0, down838=null;
- function step838(n){
-   document.querySelectorAll('#v837BookingProgress .v837Step').forEach(el=>{const s=Number(el.dataset.step);el.classList.toggle('active',s===n);el.classList.toggle('done',s<n)});
- }
- function chosenFallback838(b){
-   const c=q('v77ChosenBarber');if(!c||!b)return;c.classList.remove('hidden');c.classList.add('v837ChosenReady');
-   if(!c.textContent.includes(b.name)){
-     c.textContent='';
-     const span=document.createElement('span'), strong=document.createElement('b'), small=document.createElement('small');
-     strong.textContent=(document.documentElement.lang==='en'?'Selected: ':'تم اختيار: ')+b.name;
-     const salon=(typeof salons!=='undefined'&&Array.isArray(salons))?salons.find(s=>s.id===b.salonId):null;
-     small.textContent=salon?.name||'';span.append(strong,small);c.append(span);
-   }
-   if(!c.querySelector('.v837ChangeBarber')){const x=document.createElement('button');x.type='button';x.className='v837ChangeBarber';x.textContent=document.documentElement.lang==='en'?'Change':'تغيير';x.addEventListener('click',()=>window.v837ChangeBarber?.());c.append(x)}
- }
- function forceSchedule838(scroll=true){
-   const picker=q('v77BookingPicker'),sch=q('v77Schedule');
-   picker?.classList.add('v837Picked','v838Schedule');
-   if(sch){sch.classList.remove('v837Waiting');sch.classList.add('v837Ready','v838Visible');sch.style.removeProperty('display')}
-   step838(2);
-   if(scroll&&sch)setTimeout(()=>sch.scrollIntoView({behavior:'smooth',block:'start'}),20);
- }
- window.selectBarberV77=function(id,close=true){
-   let r;
-   try{if(typeof oldSelect838==='function')r=oldSelect838.apply(this,arguments)}catch(err){console.error('halaqi select barber fallback',err)}
-   try{
-     const b=(typeof barbers!=='undefined'&&Array.isArray(barbers))?barbers.find(x=>x.id===id):null,sel=q('bookingBarber');if(!b||!sel)return r;
-     if(![...sel.options].some(o=>o.value===id)){const o=document.createElement('option');o.value=id;o.textContent=b.name;sel.appendChild(o)}
-     sel.value=id;
-     try{currentBarberId=id;localStorage.setItem('halaqi_barber',id)}catch{}
-     try{sel.dispatchEvent(new Event('change',{bubbles:true}))}catch{}
-     try{window.updateBookingInfo?.()}catch{}
-     try{window.renderScheduleButtonsV77?.()}catch{}
-     chosenFallback838(b);forceSchedule838(true);
-     if(close)q('v77SalonPickerModal')?.classList.remove('show');
-   }catch(err){console.error('halaqi force booking stage',err)}
-   return r;
- };
- function extractArg838(el,name){const s=el.getAttribute('onclick')||'';const m=s.match(new RegExp(name+"\\('([^']+)'\\)"));return m?.[1]||''}
- function activate838(el){
-   if(!el)return false;
-   if(el.matches('.v77Entity')){
-     const bid=extractArg838(el,'selectBarberV77');if(bid){window.selectBarberV77(bid);return true}
-     const sid=extractArg838(el,'openSalonBarbersV77');if(sid){window.openSalonBarbersV77?.(sid);return true}
-   }
-   if(el.matches('.addonChip')){const id=extractArg838(el,'toggleQuickAddon');if(id){window.toggleQuickAddon?.(id);return true}}
-   if(el.matches('.v77Day')){const v=extractArg838(el,'chooseDayV77');if(v){window.chooseDayV77?.(v);step838(2);setTimeout(()=>q('v77Times')?.scrollIntoView({behavior:'smooth',block:'center'}),20);return true}}
-   if(el.matches('.v77Time')){const v=extractArg838(el,'chooseTimeV77');if(v){window.chooseTimeV77?.(v);step838(3);setTimeout(()=>document.querySelector('#booking .confirmOneTap')?.scrollIntoView({behavior:'smooth',block:'center'}),20);return true}}
-   if(el.matches('.v837ChangeBarber')){window.v837ChangeBarber?.();q('v77BookingPicker')?.classList.remove('v838Schedule');q('v77Schedule')?.classList.remove('v838Visible');return true}
-   if(el.matches('.confirmOneTap')){window.confirmBooking?.();return true}
-   return false;
- }
- const selector838='.v77Entity,.addonChip,.v77Day,.v77Time,.v837ChangeBarber,.confirmOneTap';
- function bindSurface838(host){
-   if(!host||host.dataset.v838Bound)return;host.dataset.v838Bound='1';
-   host.querySelectorAll('button').forEach(b=>{if(!b.type)b.type='button'});
-   host.addEventListener('pointerdown',e=>{const el=e.target.closest(selector838);if(!el||!host.contains(el))return;down838={el,x:e.clientX,y:e.clientY,t:performance.now()}},{capture:true,passive:true});
-   host.addEventListener('pointerup',e=>{const el=e.target.closest(selector838);if(!el||!down838||el!==down838.el)return;const moved=Math.hypot(e.clientX-down838.x,e.clientY-down838.y)>12,slow=performance.now()-down838.t>900;down838=null;if(moved||slow)return;e.preventDefault();e.stopImmediatePropagation();handledAt838=performance.now();activate838(el)},{capture:true,passive:false});
-   host.addEventListener('click',e=>{const el=e.target.closest(selector838);if(!el||!host.contains(el))return;e.preventDefault();e.stopImmediatePropagation();if(performance.now()-handledAt838<650)return;handledAt838=performance.now();activate838(el)},{capture:true});
- }
- function bindSalon838(){
-   const host=q('v77SalonPickerModal');if(!host||host.dataset.v838Bound)return;host.dataset.v838Bound='1';let down=null,last=0;
-   const sel='.v77SalonBarber,#v77AnyBarberBtn';
-   const run=el=>{const bid=extractArg838(el,'selectBarberV77');if(bid){window.selectBarberV77(bid);return}if(el.id==='v77AnyBarberBtn')window.chooseAnySalonBarberV77?.()};
-   host.addEventListener('pointerdown',e=>{const el=e.target.closest(sel);if(el)down={el,x:e.clientX,y:e.clientY}},{capture:true,passive:true});
-   host.addEventListener('pointerup',e=>{const el=e.target.closest(sel);if(!down||el!==down.el||Math.hypot(e.clientX-down.x,e.clientY-down.y)>12){down=null;return}down=null;e.preventDefault();e.stopImmediatePropagation();last=performance.now();run(el)},{capture:true,passive:false});
-   host.addEventListener('click',e=>{const el=e.target.closest(sel);if(!el)return;e.preventDefault();e.stopImmediatePropagation();if(performance.now()-last<650)return;run(el)},{capture:true});
- }
- function init838(){bindSurface838(q('booking'));bindSalon838();document.documentElement.dataset.halaqiVersion='8.3.8';const f=document.querySelector('.h832MenuFoot');if(f)f.textContent='حلاقي • V8.3.8'}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init838,{once:true});else init838();setTimeout(init838,500);
 })();
 </script>
 
