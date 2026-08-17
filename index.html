@@ -567,53 +567,7 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(max-width:390px){.h83Person,.h83PayoutGrid{grid-template-columns:1fr}.h83PayoutGrid .full,.h83Person label{grid-column:1}.h83RealMap{min-height:280px}.h83GroupHead{align-items:flex-start}.h83Counter button{width:36px;height:36px}}
 </style>
 
-
-<style id="halaqi-v833-fixes-css">
-/* Halaqi V8.4.0 Clean Core — UX, map, registration and security; no global gesture hacks */
-html,body,#app,.app,.screen{max-width:100%!important;overflow-x:hidden!important}
-#swipeEdgeHint,.swipeEdgeHint{display:none!important}
-.swipePhysicsPreview,.swipePhysicsShade{display:none!important;pointer-events:none!important}
-
-/* Header calibration: visually centered identity, slightly left, clean subline. */
-.h832Brand{transform:translateX(-8px)!important}
-.h832BrandCopy{gap:2px!important}
-.h832BrandCopy small{margin-top:0!important;font-size:7.2px!important;line-height:1.15!important;letter-spacing:0!important;opacity:.92!important}
-@media(max-width:390px){.h832Brand{transform:translateX(-7px)!important}.h832BrandCopy small{font-size:6.8px!important}}
-
-
-/* The menu must always sit above Leaflet panes. */
-.h832MenuShade{z-index:5000!important}.h832Menu{z-index:5001!important}
-
-/* Hero uses a clean barbershop photo only; all branding/text is HTML above it. */
-#customerHome>.hero{
- background-image:linear-gradient(180deg,rgba(5,18,31,.08) 0%,rgba(5,18,31,.30) 48%,rgba(5,18,31,.94) 100%),url('https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=1400')!important;
- background-size:cover!important;background-position:center 44%!important;
-}
-
-/* Home map card */
-.h833HomeMapCard{margin:12px 0 16px;padding:13px;border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:0 12px 28px rgba(8,24,38,.07)}
-.h833MapHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}.h833MapHead h3{margin:0;color:var(--navy);font-size:15px}.h833MapHead small{display:block;margin-top:3px;color:var(--muted);font-size:9px!important}.dark .h833MapHead h3{color:#fff!important}
-.h833HomeMap{height:205px;border-radius:17px;overflow:hidden;border:1px solid var(--line);background:var(--surface2);position:relative}
-.h833MapFallback{height:100%;display:grid;place-items:center;text-align:center;padding:18px;color:var(--muted);font-size:10px;line-height:1.6}
-.h833Nearby{display:grid;gap:6px;margin-top:9px}.h833Nearby button{width:100%;border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:14px;padding:9px 10px;display:flex;align-items:center;gap:9px;text-align:start}.h833NearbyIcon{width:34px;height:34px;border-radius:11px;background:var(--goldSoft);color:var(--gold2);display:grid;place-items:center;flex:none}.h833NearbyCopy{min-width:0;flex:1}.h833NearbyCopy b{display:block;font-size:10px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dark .h833NearbyCopy b{color:#fff}.h833NearbyCopy small{display:block;font-size:8px!important;color:var(--muted);margin-top:2px}.h833MapActions{display:grid;grid-template-columns:1fr 1.25fr;gap:7px;margin-top:9px}.h833MapActions button{min-height:40px}
-
-/* Registration map */
-.h833RegLocation{margin-top:12px;padding:12px;border-radius:18px;border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));background:color-mix(in srgb,var(--gold) 4%,var(--surface))}
-.h833RegLocation h3{margin:0 0 4px;font-size:13px;color:var(--navy)}.dark .h833RegLocation h3{color:#fff}.h833RegLocation p{margin:0 0 9px;color:var(--muted);font-size:9px!important;line-height:1.6}
-.h833RegMap{height:255px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface2)}
-.h833RegLocationStatus{margin-top:7px;padding:8px 9px;border-radius:11px;background:var(--surface2);font-size:8.5px;color:var(--muted);line-height:1.5}
-.h833RegLocationStatus.ok{color:var(--green);font-weight:800}
-#regNewSalon,.h833OldRegLocation{display:none!important}
-
-/* Secure recovery / password change */
-.h833SecurityNotice{padding:11px;border-radius:14px;background:color-mix(in srgb,var(--gold) 7%,var(--surface2));border:1px solid color-mix(in srgb,var(--gold) 24%,var(--line));font-size:9.5px;line-height:1.7;color:var(--muted);margin:9px 0}
-.h833SecurityNotice b{color:var(--text)}
-.h833PasswordPanel{margin-top:10px}
-#h833ChangePasswordModal .modalCard{max-width:390px}
-
-@media(max-width:390px){.h833HomeMap{height:190px}.h833RegMap{height:235px}.h833MapActions{grid-template-columns:1fr}}
-</style>
-
+<meta name="halaqi-build" content="8.3.2.2-root-fix">
 </head>
 <body>
 <div id="halaqiSplash" role="status" aria-label="جار فتح تطبيق حلاقي">
@@ -1319,10 +1273,31 @@ function openCurrentAccount(){
  else if(currentRole==='salon')showScreen('salonAccount');
  else showScreen('developerAccount');
 }
-const roleBtnLegacy=$('#roleBtn');if(roleBtnLegacy)roleBtnLegacy.onclick=openCurrentAccount;
+{const __r=$('#roleBtn');if(__r)__r.onclick=openCurrentAccount;}
 
-// V8.4 Clean Core: app-level edge swipe removed.
-function showSwipeHint(){}
+// Edge swipe back: RTL = right edge -> left, LTR = left edge -> right.
+let swipeStartX=0,swipeStartY=0,swipeTracking=false;
+document.addEventListener('touchstart',e=>{
+ if(e.touches.length!==1)return;
+ const x=e.touches[0].clientX,y=e.touches[0].clientY,w=window.innerWidth;
+ const rtl=document.documentElement.dir!=='ltr';
+ const atEdge=rtl?(x>w-34):(x<34);
+ if(atEdge){swipeTracking=true;swipeStartX=x;swipeStartY=y}
+},{passive:true});
+document.addEventListener('touchend',e=>{
+ if(!swipeTracking)return;swipeTracking=false;
+ const t=e.changedTouches[0],dx=t.clientX-swipeStartX,dy=Math.abs(t.clientY-swipeStartY);
+ const rtl=document.documentElement.dir!=='ltr';
+ if(dy<65&&((rtl&&dx<-75)||(!rtl&&dx>75)))goBack()
+},{passive:true});
+function showSwipeHint(){
+ if(localStorage.getItem('halaqi_swipe_hint'))return;
+ const el=$('#swipeEdgeHint');if(!el)return;
+ const en=document.documentElement.lang==='en';
+ el.textContent=en?'Swipe from the left edge to go back':'للرجوع اسحب من حافة اليمين إلى اليسار';
+ el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600);
+ localStorage.setItem('halaqi_swipe_hint','1')
+}
 
 const navs={
  customer:[['customerHome','⌂','الرئيسية'],['explore','◉','استكشف'],['booking','✂','احجز'],['customerProfile','◌','حسابي']],
@@ -2042,7 +2017,7 @@ function applyLanguage(){
  v66Translating=true;
  document.documentElement.lang=lang;document.documentElement.dir=lang==='en'?'ltr':'rtl';
  const ls=$('#langSwitch');if(ls)ls.classList.toggle('on',lang==='en');
- const brandTitleLegacy=$('#brandTitle'),brandSubLegacy=$('#brandSub');if(brandTitleLegacy)brandTitleLegacy.textContent=d.brand;if(brandSubLegacy)brandSubLegacy.textContent=d.sub;
+ {const __bt=$('#brandTitle'),__bs=$('#brandSub');if(__bt)__bt.textContent=d.brand;if(__bs)__bs.textContent=d.sub;}
  $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(d[k])el.innerHTML=d[k]});
  rememberArabicSource();renderLanguage(lang);updateSwipeGuide();
  const ib=$('#installAppBtn');if(ib)ib.textContent=lang==='en'?'Install Halaqi':'تثبيت حلاقي';
@@ -2277,7 +2252,6 @@ track('open');renderAll();showScreen(homeForRole(),false);detectLocation();autom
   const tb=document.getElementById('v67TopBarbers');if(tb)tb.innerHTML=[...barbers].sort((a,b)=>b.rating-a.rating).slice(0,4).map(barberHTML).join('');
   const ts=document.getElementById('v67TopSalons');if(ts)ts.innerHTML=[...salons].sort((a,b)=>b.rating-a.rating).slice(0,3).map(salonTopHTML).join('');
  }
- window.buildHomeRanking=buildHomeRanking;
  function salonTopHTML(s){return `<article class="topSalonCard"><div class="avatar"><img class="avatarImg" src="${s.avatar}" alt=""></div><div><h3>${esc(s.name)}</h3><p>★ ${s.rating||'—'} • ${s.status==='online'?(isEn()?'Available now':'متاح الآن'):(isEn()?'Busy':'مشغول')} • ${s.members?.length||0} ${isEn()?'barbers':'حلاقين'}</p></div><button class="secondary" onclick="openPublicProfile('salon','${s.id}')">${isEn()?'Profile':'الصفحة'}</button></article>`}
 
  // Public profile, follow, social links and profile photos.
@@ -2890,7 +2864,6 @@ body.dark .travelRec{background:var(--surface)}body.dark .travelRec b{color:#fff
  }
  function maybeAskHomeProvince(){
    if(homeProvince())return;
-   if(!q('customerHome')?.classList.contains('active'))return;
    const cp=currentProvince()||'بغداد';const s=q('homeProvinceFirst');if(s)s.value=cp;
    q('homeProvinceModal')?.classList.add('show')
  }
@@ -3348,8 +3321,20 @@ body.dark .searchSelectResults button{color:#fff!important}
      n.innerHTML=(sets[currentRole]||sets.barber).map((x,i)=>`<button class="navBtn ${i===0?'active':''}" data-screen="${x[0]}" onclick="showScreen('${x[0]}')"><span style="font-size:20px">${x[1]}</span>${x[2]}</button>`).join('')
    }
  };
-  // V8.4 Clean Core: V7.0 global edge-swipe navigation removed; native taps/scroll only.
 
+ // ---- Both edges swipe inward = back ----
+ let edgeStart=null;
+ document.addEventListener('touchstart',e=>{
+   if(e.touches.length!==1)return;
+   const t=e.touches[0],w=innerWidth;
+   if(t.clientX<38){edgeStart={side:'left',x:t.clientX,y:t.clientY};e.stopImmediatePropagation()}
+   else if(t.clientX>w-38){edgeStart={side:'right',x:t.clientX,y:t.clientY};e.stopImmediatePropagation()}
+ },{passive:true,capture:true});
+ document.addEventListener('touchend',e=>{
+   if(!edgeStart)return;
+   const t=e.changedTouches[0],dx=t.clientX-edgeStart.x,dy=Math.abs(t.clientY-edgeStart.y),side=edgeStart.side;edgeStart=null;
+   if(dy<70&&((side==='left'&&dx>75)||(side==='right'&&dx<-75)))goBack()
+ },{passive:true,capture:true});
 
  function updateSwipeCopy(){
    const title=q('swipeGuideTitle'),copy=q('swipeGuideText');
@@ -4591,9 +4576,355 @@ body.dark .shortHandleNotice b{color:#fff!important}
 </script>
 
 
+<style id="halaqi-v76-css">
+/* V7.6 — physically smooth, vertically-stable edge swipe */
+html.swipePhysicsLock,
+html.swipePhysicsLock body{
+  overscroll-behavior:none!important;
+}
+html.swipePhysicsCommitting::view-transition-old(root),
+html.swipePhysicsCommitting::view-transition-new(root){
+  animation:none!important;
+}
+.swipePhysicsPreview{
+  position:fixed;
+  inset:0;
+  z-index:28;
+  overflow:hidden;
+  pointer-events:none;
+  background:var(--bg);
+  contain:paint;
+  transform:translateZ(0);
+}
+.swipePhysicsPreviewInner{
+  position:absolute;
+  inset-inline:0;
+  top:0;
+  width:100%;
+  min-height:100%;
+  will-change:transform,opacity;
+  transform:translate3d(0,0,0);
+}
+.swipePhysicsPreview .screen{
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+  min-height:100dvh!important;
+  background:var(--bg)!important;
+}
+.screen.swipePhysicsCurrent{
+  position:relative!important;
+  z-index:32!important;
+  will-change:transform,border-radius,box-shadow;
+  transform-origin:center center!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+  contain:paint;
+}
+body.swipePhysicsActive .bottomNav{
+  transform:translateZ(0)!important;
+}
+.swipePhysicsShade{
+  position:fixed;
+  inset:0;
+  z-index:31;
+  pointer-events:none;
+  background:rgba(3,14,25,.18);
+  opacity:0;
+  will-change:opacity;
+}
+@media (prefers-reduced-motion: reduce){
+  .screen.swipePhysicsCurrent,
+  .swipePhysicsPreviewInner{
+    transition:none!important;
+  }
+}
+</style>
 
+<script id="halaqi-v76-js">
+(()=>{
+ const q=id=>document.getElementById(id);
+ const nativeScrollTo=window.scrollTo.bind(window);
+ const POS_KEY='halaqi_screen_scroll_v76';
+ let gesture=null, physicsCommitting=false, springFrame=0;
 
+ function readPositions(){
+   try{return JSON.parse(sessionStorage.getItem(POS_KEY)||'{}')||{}}catch{return {}}
+ }
+ function savePosition(id,y){
+   if(!id)return;
+   const map=readPositions();map[id]=Math.max(0,Math.round(y||0));
+   sessionStorage.setItem(POS_KEY,JSON.stringify(map))
+ }
+ function getPosition(id){return Number(readPositions()[id]||0)}
 
+ function readHistory(){
+   try{return JSON.parse(localStorage.getItem('halaqi_history')||'[]')||[]}catch{return []}
+ }
+ function writeHistory(h){localStorage.setItem('halaqi_history',JSON.stringify(h.slice(-20)))}
+ function roleHome(){
+   return currentRole==='barber'?'barberHome':
+          currentRole==='salon'?'salonHome':
+          currentRole==='developer'?'developerHome':'customerHome'
+ }
+ function destination(){
+   const h=readHistory();
+   return {id:h.length?h[h.length-1]:roleHome(),hasHistory:h.length>0}
+ }
+
+ function modalOpen(){
+   return !!document.querySelector('.modal.show,.modal.open,[role="dialog"].show')
+ }
+ function sanitizeClone(root){
+   if(root.id)root.removeAttribute('id');
+   root.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+   root.querySelectorAll('script,iframe,video,audio').forEach(el=>el.remove());
+   root.querySelectorAll('input,textarea,select,button,a').forEach(el=>el.setAttribute('tabindex','-1'));
+   return root
+ }
+
+ function lockBody(y){
+   const b=document.body;
+   const prior={
+     position:b.style.position,top:b.style.top,left:b.style.left,right:b.style.right,
+     width:b.style.width,overflow:b.style.overflow,touchAction:b.style.touchAction
+   };
+   b.style.position='fixed';
+   b.style.top=`-${y}px`;
+   b.style.left='0';
+   b.style.right='0';
+   b.style.width='100%';
+   b.style.overflow='hidden';
+   b.style.touchAction='none';
+   document.documentElement.classList.add('swipePhysicsLock');
+   document.body.classList.add('swipePhysicsActive');
+   return prior
+ }
+ function unlockBody(prior,y){
+   const b=document.body;
+   Object.assign(b.style,prior||{});
+   document.documentElement.classList.remove('swipePhysicsLock','swipePhysicsCommitting');
+   document.body.classList.remove('swipePhysicsActive');
+   nativeScrollTo({top:Math.max(0,y||0),left:0,behavior:'auto'})
+ }
+
+ function buildPreview(targetId,targetY,side){
+   const target=document.getElementById(targetId);
+   if(!target)return null;
+   const outer=document.createElement('div');outer.className='swipePhysicsPreview';
+   const inner=document.createElement('div');inner.className='swipePhysicsPreviewInner';
+   const clone=sanitizeClone(target.cloneNode(true));
+   clone.classList.add('active');
+   inner.appendChild(clone);outer.appendChild(inner);
+   document.body.appendChild(outer);
+
+   // Freeze destination at its own remembered vertical position.
+   inner.style.top=`-${Math.max(0,targetY)}px`;
+   inner.style.paddingTop=`${Math.max(0,targetY)}px`;
+   const dir=side==='left'?1:-1;
+   inner.style.transform=`translate3d(${-dir*20}px,0,0) scale(.985)`;
+   inner.style.opacity='.78';
+   return {outer,inner}
+ }
+ function buildShade(){
+   const s=document.createElement('div');s.className='swipePhysicsShade';
+   document.body.appendChild(s);return s
+ }
+
+ function setVisual(g,x){
+   g.pos=x;
+   const w=Math.max(320,innerWidth);
+   const p=Math.max(0,Math.min(1,Math.abs(x)/w));
+   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const scale=reduce?1:(1-.010*p);
+   const radius=reduce?0:(18*p);
+   const shadow=reduce?'none':`${-g.dir*18*p}px 0 ${34*p}px rgba(2,13,23,${(0.22*p).toFixed(3)})`;
+
+   g.current.style.transform=`translate3d(${x}px,0,0) scale(${scale})`;
+   g.current.style.borderRadius=`${radius}px`;
+   g.current.style.boxShadow=shadow;
+
+   if(g.preview){
+     const px=-g.dir*20*(1-p);
+     const ps=reduce?1:(.985+.015*p);
+     g.preview.inner.style.transform=`translate3d(${px}px,0,0) scale(${ps})`;
+     g.preview.inner.style.opacity=String(.78+.22*p)
+   }
+   if(g.shade)g.shade.style.opacity=String(.16*(1-p))
+ }
+ function dragMap(distance,width){
+   const d=Math.max(0,distance),limit=width*.96;
+   if(d<=limit)return d;
+   return limit+(d-limit)*.16
+ }
+ function springTo(g,target,initialVelocity,onDone){
+   cancelAnimationFrame(springFrame);
+   let x=g.pos||0,v=initialVelocity||0,last=performance.now();
+   const k=235,c=31;
+   function step(now){
+     const dt=Math.min(.024,Math.max(.001,(now-last)/1000));last=now;
+     const a=-k*(x-target)-c*v;
+     v+=a*dt;x+=v*dt;
+     setVisual(g,x);
+     if(Math.abs(target-x)<.55&&Math.abs(v)<7){
+       setVisual(g,target);onDone?.();return
+     }
+     springFrame=requestAnimationFrame(step)
+   }
+   springFrame=requestAnimationFrame(step)
+ }
+
+ function beginHorizontal(g){
+   if(g.locked)return;
+   g.locked=true;
+   g.current.classList.add('swipePhysicsCurrent');
+   g.bodyPrior=lockBody(g.scrollY);
+   g.preview=buildPreview(g.targetId,g.targetY,g.side);
+   g.shade=buildShade();
+   setVisual(g,0)
+ }
+ function cleanup(g,restoreY){
+   cancelAnimationFrame(springFrame);
+   if(g.current){
+     g.current.classList.remove('swipePhysicsCurrent');
+     g.current.style.transform='';
+     g.current.style.borderRadius='';
+     g.current.style.boxShadow='';
+     g.current.style.willChange=''
+   }
+   g.preview?.outer?.remove();
+   g.shade?.remove();
+   unlockBody(g.bodyPrior,restoreY);
+   gesture=null
+ }
+
+ function swapWithoutScroll(targetId){
+   const realScroll=window.scrollTo;
+   let reassigned=false;
+   try{window.scrollTo=()=>{};reassigned=true}catch{}
+   document.documentElement.classList.add('swipePhysicsCommitting');
+   try{window.showScreen(targetId,false)}
+   finally{
+     if(reassigned)window.scrollTo=realScroll;
+   }
+ }
+
+ function completeBack(g){
+   const h=readHistory();
+   if(g.hasHistory)h.pop();
+   writeHistory(h);
+   physicsCommitting=true;
+
+   // Keep both pages vertically frozen while the actual DOM swaps beneath the finished gesture.
+   swapWithoutScroll(g.targetId);
+
+   physicsCommitting=false;
+   cleanup(g,g.targetY);
+
+   // Two-frame correction cancels any delayed smooth scroll left by legacy navigation code.
+   requestAnimationFrame(()=>nativeScrollTo({top:g.targetY,left:0,behavior:'auto'}));
+   requestAnimationFrame(()=>requestAnimationFrame(()=>nativeScrollTo({top:g.targetY,left:0,behavior:'auto'})));
+   try{navigator.vibrate?.(7)}catch{}
+ }
+
+ function cancelBack(g){
+   springTo(g,0,-g.velocityPxS*.18,()=>cleanup(g,g.scrollY))
+ }
+
+ function start(e){
+   if(e.touches.length!==1||modalOpen())return;
+   const t=e.touches[0],w=innerWidth;
+   let side=null;
+   if(t.clientX<=40)side='left';
+   else if(t.clientX>=w-40)side='right';
+   if(!side)return;
+
+   const cur=document.querySelector('.screen.active');
+   if(!cur)return;
+   const dest=destination();
+   if(dest.id===cur.id&&!dest.hasHistory)return;
+
+   // We own edge gestures before older document-level handlers see them.
+   e.stopImmediatePropagation();
+
+   savePosition(cur.id,window.scrollY);
+   gesture={
+     side,dir:side==='left'?1:-1,
+     x0:t.clientX,y0:t.clientY,lastX:t.clientX,lastT:performance.now(),
+     velocityPxS:0,locked:false,cancelled:false,current:cur,pos:0,
+     scrollY:window.scrollY,targetId:dest.id,targetY:getPosition(dest.id),hasHistory:dest.hasHistory,
+     preview:null,shade:null,bodyPrior:null
+   }
+ }
+ function move(e){
+   const g=gesture;if(!g||e.touches.length!==1)return;
+   const t=e.touches[0],dx=t.clientX-g.x0,dy=t.clientY-g.y0;
+   const inward=g.dir*dx;
+   const ax=Math.abs(dx),ay=Math.abs(dy);
+
+   e.stopImmediatePropagation();
+
+   if(!g.locked){
+     if(ay>12&&ay>ax*1.12){g.cancelled=true;gesture=null;return}
+     if(inward>8&&ax>ay*1.18)beginHorizontal(g);
+     else return
+   }
+
+   e.preventDefault();
+
+   const now=performance.now(),dt=Math.max(8,now-g.lastT);
+   const rawV=(t.clientX-g.lastX)/dt*1000;
+   g.velocityPxS=g.velocityPxS*.68+rawV*.32;
+   g.lastX=t.clientX;g.lastT=now;
+
+   const mapped=dragMap(inward,Math.max(320,innerWidth));
+   setVisual(g,g.dir*mapped)
+ }
+ function end(e){
+   const g=gesture;if(!g)return;
+   e.stopImmediatePropagation();
+   if(!g.locked){gesture=null;return}
+
+   const t=e.changedTouches?.[0],dx=t?t.clientX-g.x0:g.dir*Math.abs(g.pos);
+   const inward=Math.max(0,g.dir*dx);
+   const p=inward/Math.max(320,innerWidth);
+   const inwardV=g.dir*g.velocityPxS;
+   const finish=p>.27||inwardV>480;
+
+   if(finish){
+     const target=g.dir*(innerWidth+28);
+     springTo(g,target,g.velocityPxS,()=>completeBack(g))
+   }else cancelBack(g)
+ }
+ function cancel(){
+   const g=gesture;if(!g)return;
+   if(g.locked)cancelBack(g);else gesture=null
+ }
+
+ // Window capture runs before the legacy document-capture swipe handler.
+ window.addEventListener('touchstart',start,{passive:true,capture:true});
+ window.addEventListener('touchmove',move,{passive:false,capture:true});
+ window.addEventListener('touchend',end,{passive:true,capture:true});
+ window.addEventListener('touchcancel',cancel,{passive:true,capture:true});
+
+ // Remember per-screen vertical positions whenever normal navigation occurs.
+ const previousShow=window.showScreen;
+ window.showScreen=function(id,push=true){
+   if(!physicsCommitting){
+     const cur=document.querySelector('.screen.active');
+     if(cur)savePosition(cur.id,window.scrollY)
+   }
+   return previousShow(id,push)
+ };
+
+ function init(){
+   const cur=document.querySelector('.screen.active');if(cur&&!Object.hasOwn(readPositions(),cur.id))savePosition(cur.id,window.scrollY);
+   document.documentElement.dataset.halaqiVersion='7.6'
+ }
+ setTimeout(init,100);
+})();
+</script>
 
 <style id="halaqi-v77-css">
 /* ===== V7.7 — booking picker, premium Explore, identity & dark contrast ===== */
@@ -4935,7 +5266,7 @@ body.dark .v77Post{box-shadow:0 16px 42px rgba(0,0,0,.24)!important}
  function hardenNames(){document.querySelectorAll('.barberCard button.ownerLink,.barberCard .ownerLink').forEach(el=>{el.style.setProperty('background','transparent','important');el.style.setProperty('box-shadow','none','important');el.style.setProperty('border','0','important')})}
  function audit(){scrubLeaks();hardenNames();ensureEditor();if($('v77Times')&&$('bookingTime'))try{renderSchedule12()}catch{}}
  let queued=false;const queue=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;audit()})};
- function start(){audit();setTimeout(audit,120);setTimeout(audit,650);const o=new MutationObserver(ms=>{if(ms.some(m=>m.type==='childList'&&m.addedNodes.length))queue()});o.observe(document.body,{childList:true,subtree:true});}
+ function start(){audit();setTimeout(audit,120);setTimeout(audit,650);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 
  // Intro: short, deterministic, no network dependency and no artificial wait beyond ~1.4s.
@@ -5099,7 +5430,7 @@ body.dark .v77Post{box-shadow:0 16px 42px rgba(0,0,0,.24)!important}
  function iconFor(type,status){return L.divIcon({className:'',html:`<div class="h83LeafletMarker ${statusClass(status)}">${type==='salon'?'💈':'✂'}</div>`,iconSize:[38,38],iconAnchor:[19,36],popupAnchor:[0,-36]})}
  function validCoord(e){return Number.isFinite(Number(e?.lat))&&Number.isFinite(Number(e?.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180&&!(Number(e.lat)===0&&Number(e.lng)===0)}
  function popupHTML(type,e){const handle=type==='salon'&&e.id===DELUSSO_ID?'@1':type==='barber'&&e.id===HUSSEIN_ID?'@313':'';return `<div class="h83Popup"><b>${String(e.name||'').replace(/[<>]/g,'')} ${handle}</b><small>${type==='salon'?(en()?'Salon':'صالون'):(en()?'Barber':'حلاق')} • ${e.status==='online'?(en()?'Available':'متاح'):e.status==='busy'?(en()?'Busy':'مشغول'):(en()?'Offline':'غير متاح')}</small><button onclick="openPublicProfile('${type}','${e.id}')">${en()?'Open profile':'فتح الصفحة'}</button></div>`}
- async function renderRealMap(){ensureMapShell();const host=q('h83RealMap');if(!host)return;try{await loadLeaflet();if(!map83){host.innerHTML='';map83=L.map(host,{zoomControl:true}).setView([33.3152,44.3661],12);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map83);layer83=L.layerGroup().addTo(map83)}layer83.clearLayers();const bounds=[];salons.filter(validCoord).forEach(s=>{L.marker([Number(s.lat),Number(s.lng)],{icon:iconFor('salon',s.status)}).bindPopup(popupHTML('salon',s)).addTo(layer83);bounds.push([Number(s.lat),Number(s.lng)])});barbers.filter(b=>!b.salonId&&validCoord(b)).forEach(b=>{L.marker([Number(b.lat),Number(b.lng)],{icon:iconFor('barber',b.status)}).bindPopup(popupHTML('barber',b)).addTo(layer83);bounds.push([Number(b.lat),Number(b.lng)])});if(Number.isFinite(geo?.lat)&&Number.isFinite(geo?.lng)){if(userMarker83)userMarker83.remove();userMarker83=L.circleMarker([geo.lat,geo.lng],{radius:8,weight:3,color:'#fff',fillColor:'#387cf2',fillOpacity:1}).addTo(map83).bindPopup(en()?'Your location':'موقعك');bounds.push([geo.lat,geo.lng])}setTimeout(()=>map83.invalidateSize(),60);if(bounds.length&&map83.getZoom()<=12)map83.fitBounds(bounds,{padding:[28,28],maxZoom:14})}catch(err){host.innerHTML=`<div class="h83MapFallback"><div>${en()?'Could not load the map. Check the connection and retry.':'تعذر تحميل الخارطة. تحقق من الإنترنت ثم أعد المحاولة.'}<br><button class="secondary" style="margin-top:10px" onclick="renderHalaqiRealMap()">${en()?'Retry':'إعادة المحاولة'}</button></div></div>`;console.warn('[Halaqi map]',err)}}
+ async function renderRealMap(){ensureMapShell();const host=q('h83RealMap');if(!host)return;try{await loadLeaflet();if(!map83){host.innerHTML='';map83=L.map(host,{zoomControl:true}).setView([33.3152,44.3661],12);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map83);layer83=L.layerGroup().addTo(map83)}layer83.clearLayers();const bounds=[];salons.filter(validCoord).forEach(s=>{L.marker([Number(s.lat),Number(s.lng)],{icon:iconFor('salon',s.status)}).bindPopup(popupHTML('salon',s)).addTo(layer83);bounds.push([Number(s.lat),Number(s.lng)])});barbers.filter(validCoord).forEach(b=>{L.marker([Number(b.lat),Number(b.lng)],{icon:iconFor('barber',b.status)}).bindPopup(popupHTML('barber',b)).addTo(layer83);bounds.push([Number(b.lat),Number(b.lng)])});if(Number.isFinite(geo?.lat)&&Number.isFinite(geo?.lng)){if(userMarker83)userMarker83.remove();userMarker83=L.circleMarker([geo.lat,geo.lng],{radius:8,weight:3,color:'#fff',fillColor:'#387cf2',fillOpacity:1}).addTo(map83).bindPopup(en()?'Your location':'موقعك');bounds.push([geo.lat,geo.lng])}setTimeout(()=>map83.invalidateSize(),60);if(bounds.length&&map83.getZoom()<=12)map83.fitBounds(bounds,{padding:[28,28],maxZoom:14})}catch(err){host.innerHTML=`<div class="h83MapFallback"><div>${en()?'Could not load the map. Check the connection and retry.':'تعذر تحميل الخارطة. تحقق من الإنترنت ثم أعد المحاولة.'}<br><button class="secondary" style="margin-top:10px" onclick="renderHalaqiRealMap()">${en()?'Retry':'إعادة المحاولة'}</button></div></div>`;console.warn('[Halaqi map]',err)}}
  window.renderHalaqiRealMap=renderRealMap;
  window.halaqiUseMyLocation=function(){if(!navigator.geolocation){toast(en()?'Location is not supported.':'الموقع غير مدعوم على هذا الجهاز.');return}navigator.geolocation.getCurrentPosition(p=>{geo.lat=p.coords.latitude;geo.lng=p.coords.longitude;renderRealMap().then(()=>map83?.setView([geo.lat,geo.lng],15));toast(en()?'Location updated':'تم تحديث موقعك')},()=>toast(en()?'Location permission was not granted.':'لم يتم السماح بالوصول إلى الموقع.'),{enableHighAccuracy:true,timeout:12000,maximumAge:30000})};
  window.halaqiFitAllMap=function(){if(!map83||!layer83)return;const ls=layer83.getLayers().filter(x=>x.getLatLng);if(userMarker83)ls.push(userMarker83);if(ls.length)map83.fitBounds(L.featureGroup(ls).getBounds(),{padding:[25,25],maxZoom:14})};
@@ -5268,147 +5599,4 @@ body.dark .h832Topbar{background:rgba(13,26,42,.97)!important;border-bottom-colo
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();setTimeout(sync,180);setTimeout(sync,900);
 })();
 </script>
-
-<script id="halaqi-v833-fixes-js">
-(()=>{
- 'use strict';
- const byId=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
- document.documentElement.dataset.halaqiVersion='8.4.0';
- const validCoord=e=>Number.isFinite(Number(e?.lat))&&Number.isFinite(Number(e?.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180&&!(Number(e.lat)===0&&Number(e.lng)===0);
- const esc833=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
- const hash833=async v=>{if(window.crypto?.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}return 'local-'+btoa(unescape(encodeURIComponent(v))).slice(0,80)};
-
- // -------- V8.4 Clean Core: features only, no global click/touch/navigation interception --------
- function cleanSideMenu833(){
-   const mapLabel=document.querySelector('[data-h832-m3]');mapLabel?.closest('button')?.remove();
-   const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.4.0';
- }
- // -------- Linked barbers inherit salon coordinates and never need their own map point --------
- function syncBarberSalonCoords833(){
-   let changed=false;
-   try{barbers.forEach(b=>{if(!b.salonId)return;const s=salons.find(x=>x.id===b.salonId);if(!s)return;const lat=validCoord(s)?Number(s.lat):null,lng=validCoord(s)?Number(s.lng):null;if(b.lat!==lat||b.lng!==lng){b.lat=lat;b.lng=lng;changed=true}});if(changed)save('halaqi_barbers',barbers)}catch{}
- }
- syncBarberSalonCoords833();
-
- // -------- Leaflet loader shared by home + registration --------
- let leaflet833Promise=null;
- function loadLeaflet833(){
-   if(window.L)return Promise.resolve(window.L);if(leaflet833Promise)return leaflet833Promise;
-   leaflet833Promise=new Promise((resolve,reject)=>{
-     let css=document.querySelector('link[data-h83-leaflet],link[data-h833-leaflet]');
-     if(!css){css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';css.integrity='sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';css.crossOrigin='';css.dataset.h833Leaflet='1';document.head.appendChild(css)}
-     const existing=[...document.scripts].find(s=>/leaflet@1\.9\.4\/dist\/leaflet\.js/.test(s.src||''));
-     if(existing){existing.addEventListener('load',()=>resolve(window.L),{once:true});existing.addEventListener('error',reject,{once:true});setTimeout(()=>window.L&&resolve(window.L),30);return}
-     const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.integrity='sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';s.crossOrigin='';s.async=true;s.onload=()=>resolve(window.L);s.onerror=reject;document.head.appendChild(s)
-   });return leaflet833Promise
- }
- const km833=(a,b,c,d)=>{if([a,b,c,d].some(v=>!Number.isFinite(Number(v))))return null;const R=6371,rad=x=>x*Math.PI/180,dp=rad(c-a),dl=rad(d-b),q=Math.sin(dp/2)**2+Math.cos(rad(a))*Math.cos(rad(c))*Math.sin(dl/2)**2;return R*2*Math.atan2(Math.sqrt(q),Math.sqrt(1-q))};
-
- // -------- Smart home map --------
- let homeMap833=null,homeLayer833=null,homeUser833=null;
- function ensureHomeMap833(){
-   const home=byId('customerHome');if(!home||byId('h833HomeMapCard'))return;
-   const anchor=home.querySelector('.locationBox')||home.querySelector('.hero');if(!anchor)return;
-   const card=document.createElement('section');card.id='h833HomeMapCard';card.className='h833HomeMapCard';
-   card.innerHTML=`<div class="h833MapHead"><div><h3>${en()?'Barbers near you':'حلاقون قريبون منك'}</h3><small>${en()?'Salon locations, availability and team in one place':'مواقع الصالونات والتوفر والفريق في مكان واحد'}</small></div><button class="textBtn" onclick="showScreen('mapScreen')">${en()?'Full map':'الخريطة كاملة'}</button></div><div id="h833HomeMap" class="h833HomeMap"><div class="h833MapFallback">${en()?'Loading map…':'جارٍ تحميل الخريطة…'}</div></div><div id="h833Nearby" class="h833Nearby"></div><div class="h833MapActions"><button class="secondary" onclick="halaqiHomeUseLocation833()">⌖ ${en()?'My location':'موقعي'}</button><button class="primary" onclick="showScreen('mapScreen')">${en()?'View all salons':'عرض كل الصالونات'}</button></div>`;
-   anchor.insertAdjacentElement('afterend',card)
- }
- function salonMembers833(s){return barbers.filter(b=>b.salonId===s.id)}
- function renderNearby833(){
-   const host=byId('h833Nearby');if(!host)return;
-   let list=salons.filter(validCoord).map(s=>({s,d:(Number.isFinite(Number(geo?.lat))&&Number.isFinite(Number(geo?.lng)))?km833(Number(geo.lat),Number(geo.lng),Number(s.lat),Number(s.lng)):null}));
-   list.sort((a,b)=>(a.d??99999)-(b.d??99999)||(Number(b.s.rating)||0)-(Number(a.s.rating)||0));list=list.slice(0,3);
-   host.innerHTML=list.map(({s,d})=>{const m=salonMembers833(s),available=m.filter(b=>b.status==='online').length;return `<button type="button" onclick="openPublicProfile('salon','${esc833(s.id)}')"><span class="h833NearbyIcon">💈</span><span class="h833NearbyCopy"><b>${esc833(s.name)}</b><small>${d!=null?d.toFixed(1)+' كم • ':''}${m.length} ${en()?'barbers':'حلاقين'}${available?' • '+available+' '+(en()?'available':'متاح'):''}</small></span><span>‹</span></button>`}).join('')||`<div class="h833MapFallback" style="height:auto">${en()?'No salon location has been registered yet.':'لا توجد مواقع صالونات محددة حتى الآن.'}</div>`
- }
- async function renderHomeMap833(){
-   ensureHomeMap833();renderNearby833();const host=byId('h833HomeMap');if(!host||!byId('customerHome')?.classList.contains('active'))return;
-   try{await loadLeaflet833();if(!document.body.contains(host))return;
-     if(!homeMap833){host.innerHTML='';homeMap833=L.map(host,{zoomControl:false,attributionControl:true,dragging:true,scrollWheelZoom:false,doubleClickZoom:false}).setView([33.3152,44.3661],12);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(homeMap833);homeLayer833=L.layerGroup().addTo(homeMap833)}
-     homeLayer833.clearLayers();const bounds=[];
-     salons.filter(validCoord).forEach(s=>{const members=salonMembers833(s),avail=members.filter(b=>b.status==='online').length;const icon=L.divIcon({className:'',html:`<div class="h83LeafletMarker ${avail?'online':s.status==='busy'?'busy':'offline'}">💈</div>`,iconSize:[38,38],iconAnchor:[19,36]});L.marker([Number(s.lat),Number(s.lng)],{icon}).bindPopup(`<div class="h83Popup"><b>${esc833(s.name)}</b><small>${members.length} ${en()?'barbers':'حلاقين'}${avail?' • '+avail+' '+(en()?'available':'متاح'):''}</small><button onclick="openPublicProfile('salon','${esc833(s.id)}')">${en()?'Open salon':'فتح الصالون'}</button></div>`).addTo(homeLayer833);bounds.push([Number(s.lat),Number(s.lng)])});
-     barbers.filter(b=>!b.salonId&&validCoord(b)).forEach(b=>{const icon=L.divIcon({className:'',html:`<div class="h83LeafletMarker ${b.status==='online'?'online':b.status==='busy'?'busy':'offline'}">✂</div>`,iconSize:[38,38],iconAnchor:[19,36]});L.marker([Number(b.lat),Number(b.lng)],{icon}).bindPopup(`<div class="h83Popup"><b>${esc833(b.name)}</b><small>${en()?'Independent barber':'حلاق مستقل'}</small><button onclick="openPublicProfile('barber','${esc833(b.id)}')">${en()?'Open profile':'فتح الصفحة'}</button></div>`).addTo(homeLayer833);bounds.push([Number(b.lat),Number(b.lng)])});
-     if(Number.isFinite(Number(geo?.lat))&&Number.isFinite(Number(geo?.lng))){if(homeUser833)homeUser833.remove();homeUser833=L.circleMarker([Number(geo.lat),Number(geo.lng)],{radius:7,weight:3,color:'#fff',fillColor:'#387cf2',fillOpacity:1}).addTo(homeMap833);bounds.push([Number(geo.lat),Number(geo.lng)])}
-     setTimeout(()=>homeMap833.invalidateSize(),80);if(bounds.length)homeMap833.fitBounds(bounds,{padding:[24,24],maxZoom:14})
-   }catch(e){host.innerHTML=`<div class="h833MapFallback">${en()?'Map is unavailable right now. Nearby salons are still shown below.':'الخريطة غير متاحة الآن، وتبقى الصالونات القريبة ظاهرة بالأسفل.'}</div>`}
- }
- window.halaqiHomeUseLocation833=function(){if(!navigator.geolocation){toast(en()?'Location is not supported':'الموقع غير مدعوم');return}navigator.geolocation.getCurrentPosition(p=>{geo.lat=p.coords.latitude;geo.lng=p.coords.longitude;geo.province='موقعك الحالي';const ln=byId('locationName'),lc=byId('locationCoords');if(ln)ln.textContent=en()?'Your location':'موقعك الحالي';if(lc)lc.textContent=`${geo.lat.toFixed(4)}, ${geo.lng.toFixed(4)}`;renderHomeMap833();toast(en()?'Location updated':'تم تحديث موقعك')},()=>toast(en()?'Location permission was not granted':'لم يتم السماح بالموقع'),{enableHighAccuracy:true,timeout:12000,maximumAge:30000})};
-
- // -------- Registration: salon picks a point; barber must join a salon --------
- let regMap833=null,regMarker833=null,regLocation833={lat:null,lng:null};
- function prepareRegFields833(){
-   const fields=byId('barberRegFields');if(!fields)return;
-   const newSalon=byId('regNewSalon');if(newSalon){newSalon.classList.add('h833OldRegLocation');newSalon.previousElementSibling?.classList.add('h833OldRegLocation')}
-   [...fields.querySelectorAll('button')].filter(b=>(b.getAttribute('onclick')||'').includes('detectLocation')).forEach(b=>{b.classList.add('h833OldRegLocation');b.previousElementSibling?.classList.add('h833OldRegLocation')});
-   if(!byId('h833RegLocation')){const box=document.createElement('div');box.id='h833RegLocation';box.className='h833RegLocation';box.innerHTML=`<h3>${en()?'Salon location':'موقع الصالون'}</h3><p>${en()?'Move the pin or tap the exact salon position. Registration cannot be completed without it.':'حرّك الدبوس أو اضغط على موقع الصالون الدقيق. لا يكتمل تسجيل الصالون بدونه.'}</p><button class="secondary" style="width:100%;margin-bottom:8px" onclick="halaqiRegUseLocation833()">⌖ ${en()?'Use my current location':'استخدام موقعي الحالي'}</button><div id="h833RegMap" class="h833RegMap"><div class="h833MapFallback">${en()?'Open the map to select the salon location':'افتح الخريطة لتحديد موقع الصالون'}</div></div><div id="h833RegLocationStatus" class="h833RegLocationStatus">${en()?'No location selected yet.':'لم يتم تحديد الموقع بعد.'}</div>`;fields.insertAdjacentElement('afterend',box)}
- }
- function refreshRegSalons833(){
-   const sel=byId('regSalon');if(!sel)return;const current=sel.value;sel.innerHTML=`<option value="">${en()?'Choose your salon':'اختر الصالون الذي تعمل فيه'}</option>`+salons.map(s=>`<option value="${esc833(s.id)}">${esc833(s.name)}</option>`).join('');if([...sel.options].some(o=>o.value===current))sel.value=current
- }
- async function initRegMap833(){
-   const host=byId('h833RegMap');if(!host||byId('regType')?.value!=='salon')return;
-   try{await loadLeaflet833();if(!regMap833){host.innerHTML='';const center=Number.isFinite(Number(geo?.lat))?[Number(geo.lat),Number(geo.lng)]:[33.3152,44.3661];regMap833=L.map(host,{zoomControl:true}).setView(center,14);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(regMap833);regMap833.on('click',e=>setRegPoint833(e.latlng.lat,e.latlng.lng,true))}setTimeout(()=>regMap833.invalidateSize(),100)}catch(e){host.innerHTML=`<div class="h833MapFallback">${en()?'Could not load the map. Use your current location or retry when online.':'تعذر تحميل الخريطة. استخدم موقعك الحالي أو أعد المحاولة عند توفر الإنترنت.'}</div>`}
- }
- function setRegPoint833(lat,lng,center=false){regLocation833={lat:Number(lat),lng:Number(lng)};const st=byId('h833RegLocationStatus');if(st){st.classList.add('ok');st.textContent=`${en()?'Selected':'تم التحديد'}: ${regLocation833.lat.toFixed(5)}, ${regLocation833.lng.toFixed(5)}`};if(window.L&&regMap833){if(!regMarker833)regMarker833=L.marker([lat,lng],{draggable:true}).addTo(regMap833).on('dragend',e=>{const p=e.target.getLatLng();setRegPoint833(p.lat,p.lng,false)});else regMarker833.setLatLng([lat,lng]);if(center)regMap833.setView([lat,lng],16)}}
- window.halaqiRegUseLocation833=function(){if(!navigator.geolocation){toast(en()?'Location is not supported':'الموقع غير مدعوم');return}navigator.geolocation.getCurrentPosition(p=>{setRegPoint833(p.coords.latitude,p.coords.longitude,true);toast(en()?'Salon location selected':'تم تحديد موقع الصالون')},()=>toast(en()?'Location permission was not granted':'لم يتم السماح بالموقع'),{enableHighAccuracy:true,timeout:12000,maximumAge:0})};
- const oldToggleReg833=window.toggleRegType;
- window.toggleRegType=function(){prepareRegFields833();refreshRegSalons833();const type=byId('regType')?.value||'barber';const fields=byId('barberRegFields'),loc=byId('h833RegLocation');if(fields)fields.classList.toggle('hidden',type!=='barber');if(loc)loc.classList.toggle('hidden',type!=='salon');if(type==='salon')setTimeout(initRegMap833,50)};
- const oldOpenReg833=window.openRegistration;
- window.openRegistration=function(){if(typeof oldOpenReg833==='function')oldOpenReg833();prepareRegFields833();refreshRegSalons833();regLocation833={lat:null,lng:null};if(regMarker833){try{regMarker833.remove()}catch{}regMarker833=null}const st=byId('h833RegLocationStatus');if(st){st.classList.remove('ok');st.textContent=en()?'No location selected yet.':'لم يتم تحديد الموقع بعد.'}toggleRegType()};
- window.submitRegistration=async function(){
-   const type=byId('regType')?.value||'barber',name=byId('regName')?.value.trim()||'',phone=byId('regPhone')?.value.trim()||'',email=byId('regEmail')?.value.trim()||'',password=byId('regPassword')?.value||'';
-   if(!name||!phone||!email||password.length<8){toast(en()?'Complete name, phone, email and an 8+ character password.':'أكمل الاسم والهاتف والبريد وكلمة مرور من 8 أحرف');return}
-   const normPhone833=v=>String(v||'').replace(/[^\d+]/g,'').replace(/^00964/,'0').replace(/^\+964/,'0'),normEmail833=v=>String(v||'').trim().toLowerCase();
-   const duplicate=users.find(u=>(normPhone833(phone)&&normPhone833(u.phone)===normPhone833(phone))||(normEmail833(email)&&normEmail833(u.email)===normEmail833(email)));if(duplicate){toast(en()?'This phone or email is already used.':'رقم الهاتف أو البريد مستخدم مسبقاً');return}
-   const lockKey='halaqi_registration_lock_'+(normPhone833(phone)||normEmail833(email)),last=Number(localStorage.getItem(lockKey)||0);if(Date.now()-last<48*3600000){toast(en()?'Please wait 48 hours before another request.':'لا يمكن إرسال طلب جديد قبل مرور 48 ساعة');return}
-   const now=Date.now(),passwordHash=await hash833(password);
-   if(type==='barber'){
-     const salonId=byId('regSalon')?.value||'';if(!salonId){toast(en()?'Choose the salon where you work.':'يجب اختيار الصالون الذي تعمل فيه');return}const salon=salons.find(s=>s.id===salonId);if(!salon){toast(en()?'Salon not found.':'الصالون غير موجود');return}
-     const id='b'+now;barbers.push({id,name,phone,email,salonId,years:Number(byId('regYears')?.value||1),rating:0,level:'قيد التدقيق',status:'offline',smoking:false,lat:validCoord(salon)?Number(salon.lat):null,lng:validCoord(salon)?Number(salon.lng):null,featuredUntil:0,eventPrice:0,eventBio:'',homePrice:0,horizon:7,schedule:{}});users.push({id:id+'u',entityId:id,name,role:'barber',phone,email,passwordHash,lastLogin:now});salon.pending=Array.isArray(salon.pending)?salon.pending:[];if(!salon.pending.includes(id))salon.pending.push(id)
-   }else{
-     if(!validCoord(regLocation833)){toast(en()?'Select the salon location on the map first.':'حدد موقع الصالون على الخريطة أولاً');return}const id='s'+now;salons.push({id,name,phone,email,owner:name,bio:'',rating:0,status:'offline',lat:regLocation833.lat,lng:regLocation833.lng,gallery:[],members:[],pending:[]});users.push({id:id+'u',entityId:id,name,role:'salon',phone,email,passwordHash,lastLogin:now})
-   }
-   localStorage.setItem(lockKey,String(now));persistAll();closeModal('registerModal');syncBarberSalonCoords833();toast(en()?'Request sent for review.':'تم إرسال الطلب للتدقيق');renderAll()
- };
-
- // -------- Secure password recovery: never reset from identifier alone --------
- function secureRecoveryUI833(origin='professional'){
-   const modal=byId('forgotPasswordModal');if(!modal)return;sessionStorage.setItem('halaqi_recovery_origin',origin);
-   const card=modal.querySelector('.modalCard'),id=byId('recoveryIdentity');if(id)id.value='';
-   [byId('recoveryPassword'),byId('recoveryPassword2')].forEach(input=>{if(input){input.value='';input.style.display='none';input.previousElementSibling&&(input.previousElementSibling.style.display='none')}});
-   const err=byId('recoveryError');if(err){err.classList.remove('show');err.textContent=''}
-   const btn=[...card.querySelectorAll('button')].find(b=>(b.getAttribute('onclick')||'').includes('resetPasswordLocal'));if(btn){btn.textContent=en()?'Request secure verification':'طلب تحقق آمن';btn.onclick=requestSecureRecovery833;btn.removeAttribute('onclick')}
-   const hint=card.querySelector('.authHint');if(hint){hint.className='h833SecurityNotice';hint.innerHTML=en()?'<b>Protected recovery:</b> Halaqi will never accept a new password from a username, phone or email alone. A server-side one-time code/link is required.':'<b>استعادة محمية:</b> لن يقبل حلاقي كلمة مرور جديدة بمجرد معرفة اليوزر أو الهاتف أو البريد. يلزم رمز/رابط تحقق أحادي الاستخدام من الخادم.'}
-   modal.classList.add('show')
- }
- function requestSecureRecovery833(){
-   const id=byId('recoveryIdentity')?.value.trim()||'',err=byId('recoveryError');if(!id){if(err){err.textContent=en()?'Enter the phone number or email linked to the account.':'أدخل الهاتف أو البريد المرتبط بالحساب.';err.classList.add('show')}return}
-   // Generic response prevents account enumeration. No password is changed in this static build.
-   if(err){err.textContent=en()?'If these details belong to an account, a verification message will be sent when secure server recovery is enabled. No password has been changed.':'إذا كانت هذه البيانات مرتبطة بحساب فسيتم إرسال تحقق عند تفعيل الاستعادة الخادمية الآمنة. لم يتم تغيير أي كلمة مرور.';err.classList.add('show')}
- }
- window.resetPasswordLocal=requestSecureRecovery833;
- window.openForgotPassword=function(){closeModal('roleModal');secureRecoveryUI833('professional')};
- window.openCustomerRecovery=function(){byId('customerAuthModal')?.classList.remove('show');secureRecoveryUI833('customer')};
-
- // Secure in-session password change requires the current password.
- function currentUser833(){
-   if(currentRole==='customer')return users.find(u=>u.id===currentCustomerId)||users.find(u=>u.role==='customer');
-   if(currentRole==='barber')return users.find(u=>u.role==='barber'&&(u.entityId===currentBarberId||u.id===currentBarberId+'u'));
-   if(currentRole==='salon')return users.find(u=>u.role==='salon'&&(u.entityId===currentSalonId||u.id===currentSalonId+'u'));
-   return null
- }
- function ensurePasswordModal833(){if(byId('h833ChangePasswordModal'))return;const m=document.createElement('div');m.className='modal';m.id='h833ChangePasswordModal';m.innerHTML=`<div class="modalCard"><div class="grab"></div><div class="modalHead"><div><h2>${en()?'Change password':'تغيير كلمة المرور'}</h2><small>${en()?'Current password is required.':'يجب إدخال كلمة المرور الحالية.'}</small></div><button class="close" onclick="closeModal('h833ChangePasswordModal')">×</button></div><label>${en()?'Current password':'كلمة المرور الحالية'}</label><input class="input" id="h833OldPassword" type="password" autocomplete="current-password"><label>${en()?'New password':'كلمة المرور الجديدة'}</label><input class="input" id="h833NewPassword" type="password" autocomplete="new-password"><label>${en()?'Confirm new password':'تأكيد كلمة المرور الجديدة'}</label><input class="input" id="h833NewPassword2" type="password" autocomplete="new-password"><div class="authError" id="h833PasswordError"></div><button class="primary" style="width:100%;margin-top:10px" onclick="halaqiChangePassword833()">${en()?'Change password':'تغيير كلمة المرور'}</button></div>`;document.body.appendChild(m)}
- window.halaqiOpenChangePassword833=function(){ensurePasswordModal833();const u=currentUser833();if(!u?.passwordHash){toast(en()?'This legacy account needs server verification before a password can be set.':'هذا الحساب القديم يحتاج تحققاً خادمياً قبل تعيين كلمة مرور.');return}['h833OldPassword','h833NewPassword','h833NewPassword2'].forEach(id=>byId(id).value='');byId('h833PasswordError')?.classList.remove('show');byId('h833ChangePasswordModal')?.classList.add('show')};
- window.halaqiChangePassword833=async function(){const u=currentUser833(),err=byId('h833PasswordError'),fail=m=>{if(err){err.textContent=m;err.classList.add('show')}};if(!u?.passwordHash){fail(en()?'Secure verification is required.':'يلزم تحقق آمن.');return}const old=byId('h833OldPassword').value,n1=byId('h833NewPassword').value,n2=byId('h833NewPassword2').value;if(await hash833(old)!==u.passwordHash){fail(en()?'Current password is incorrect.':'كلمة المرور الحالية غير صحيحة.');return}if(n1.length<8){fail(en()?'Use at least 8 characters.':'استخدم 8 أحرف على الأقل.');return}if(n1!==n2){fail(en()?'New passwords do not match.':'كلمتا المرور الجديدتان غير متطابقتين.');return}u.passwordHash=await hash833(n1);save('halaqi_users',users);closeModal('h833ChangePasswordModal');if(currentRole==='customer')localStorage.removeItem('halaqi_customer_authenticated');currentRole='customer';localStorage.setItem('halaqi_role','customer');renderAll();showScreen('customerHome',false);toast(en()?'Password changed. Sign in again.':'تم تغيير كلمة المرور. سجّل الدخول من جديد.')};
- function ensureSettingsSecurity833(){const host=byId('appSettings');if(!host||byId('h833PasswordPanel'))return;const el=document.createElement('div');el.id='h833PasswordPanel';el.className='formCard h833PasswordPanel';el.innerHTML=`<h3>${en()?'Account security':'أمان الحساب'}</h3><p style="font-size:9px!important;color:var(--muted);line-height:1.6">${en()?'Password changes require your current password. Forgot-password recovery never changes an account without server verification.':'تغيير كلمة المرور يتطلب الحالية. واستعادة المنسية لا تغيّر الحساب بدون تحقق خادمي.'}</p><button class="secondary" style="width:100%" onclick="halaqiOpenChangePassword833()">${en()?'Change password':'تغيير كلمة المرور'}</button>`;host.appendChild(el)}
-
- function init833(){
-   cleanSideMenu833();prepareRegFields833();syncBarberSalonCoords833();ensureSettingsSecurity833();ensureHomeMap833();
-   const home=byId('customerHome');
-   if(home&&!home.dataset.h840MapObserver){home.dataset.h840MapObserver='1';new MutationObserver(()=>{if(home.classList.contains('active'))setTimeout(renderHomeMap833,80)}).observe(home,{attributes:true,attributeFilter:['class']})}
-   if(home?.classList.contains('active'))setTimeout(renderHomeMap833,120)
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init833,{once:true});else init833();setTimeout(init833,500);setTimeout(init833,1400);
-})();
-</script>
-
 </body></html>
