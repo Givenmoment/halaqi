@@ -6007,4 +6007,91 @@ body.dark .v837Success h2,body.dark .v837Receipt b{color:#fff}
 })();
 </script>
 
+
+
+<style id="halaqi-v838-quick-booking-control-css">
+/* V8.3.8 — deterministic quick-booking controls for iPhone/Safari. */
+#booking .v77Entity,#booking .addonChip,#booking .v77Day,#booking .v77Time,#booking .confirmOneTap,#v77SalonPickerModal button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(211,164,76,.16)}
+#v77BookingPicker.v838Schedule .v77PickerHead,#v77BookingPicker.v838Schedule .v77PickerSearch,#v77BookingPicker.v838Schedule .v77EntityGrid{display:none!important}
+#v77BookingPicker.v838Schedule{margin-bottom:8px}
+#v77Schedule.v838Visible{display:block!important;opacity:1!important;pointer-events:auto!important}
+</style>
+<script id="halaqi-v838-quick-booking-control-js">
+(()=>{
+ 'use strict';
+ const q=id=>document.getElementById(id);
+ const oldSelect838=window.selectBarberV77;
+ let handledAt838=0, down838=null;
+ function step838(n){
+   document.querySelectorAll('#v837BookingProgress .v837Step').forEach(el=>{const s=Number(el.dataset.step);el.classList.toggle('active',s===n);el.classList.toggle('done',s<n)});
+ }
+ function chosenFallback838(b){
+   const c=q('v77ChosenBarber');if(!c||!b)return;c.classList.remove('hidden');c.classList.add('v837ChosenReady');
+   if(!c.textContent.includes(b.name)){
+     c.textContent='';
+     const span=document.createElement('span'), strong=document.createElement('b'), small=document.createElement('small');
+     strong.textContent=(document.documentElement.lang==='en'?'Selected: ':'تم اختيار: ')+b.name;
+     const salon=(typeof salons!=='undefined'&&Array.isArray(salons))?salons.find(s=>s.id===b.salonId):null;
+     small.textContent=salon?.name||'';span.append(strong,small);c.append(span);
+   }
+   if(!c.querySelector('.v837ChangeBarber')){const x=document.createElement('button');x.type='button';x.className='v837ChangeBarber';x.textContent=document.documentElement.lang==='en'?'Change':'تغيير';x.addEventListener('click',()=>window.v837ChangeBarber?.());c.append(x)}
+ }
+ function forceSchedule838(scroll=true){
+   const picker=q('v77BookingPicker'),sch=q('v77Schedule');
+   picker?.classList.add('v837Picked','v838Schedule');
+   if(sch){sch.classList.remove('v837Waiting');sch.classList.add('v837Ready','v838Visible');sch.style.removeProperty('display')}
+   step838(2);
+   if(scroll&&sch)setTimeout(()=>sch.scrollIntoView({behavior:'smooth',block:'start'}),20);
+ }
+ window.selectBarberV77=function(id,close=true){
+   let r;
+   try{if(typeof oldSelect838==='function')r=oldSelect838.apply(this,arguments)}catch(err){console.error('halaqi select barber fallback',err)}
+   try{
+     const b=(typeof barbers!=='undefined'&&Array.isArray(barbers))?barbers.find(x=>x.id===id):null,sel=q('bookingBarber');if(!b||!sel)return r;
+     if(![...sel.options].some(o=>o.value===id)){const o=document.createElement('option');o.value=id;o.textContent=b.name;sel.appendChild(o)}
+     sel.value=id;
+     try{currentBarberId=id;localStorage.setItem('halaqi_barber',id)}catch{}
+     try{sel.dispatchEvent(new Event('change',{bubbles:true}))}catch{}
+     try{window.updateBookingInfo?.()}catch{}
+     try{window.renderScheduleButtonsV77?.()}catch{}
+     chosenFallback838(b);forceSchedule838(true);
+     if(close)q('v77SalonPickerModal')?.classList.remove('show');
+   }catch(err){console.error('halaqi force booking stage',err)}
+   return r;
+ };
+ function extractArg838(el,name){const s=el.getAttribute('onclick')||'';const m=s.match(new RegExp(name+"\\('([^']+)'\\)"));return m?.[1]||''}
+ function activate838(el){
+   if(!el)return false;
+   if(el.matches('.v77Entity')){
+     const bid=extractArg838(el,'selectBarberV77');if(bid){window.selectBarberV77(bid);return true}
+     const sid=extractArg838(el,'openSalonBarbersV77');if(sid){window.openSalonBarbersV77?.(sid);return true}
+   }
+   if(el.matches('.addonChip')){const id=extractArg838(el,'toggleQuickAddon');if(id){window.toggleQuickAddon?.(id);return true}}
+   if(el.matches('.v77Day')){const v=extractArg838(el,'chooseDayV77');if(v){window.chooseDayV77?.(v);step838(2);setTimeout(()=>q('v77Times')?.scrollIntoView({behavior:'smooth',block:'center'}),20);return true}}
+   if(el.matches('.v77Time')){const v=extractArg838(el,'chooseTimeV77');if(v){window.chooseTimeV77?.(v);step838(3);setTimeout(()=>document.querySelector('#booking .confirmOneTap')?.scrollIntoView({behavior:'smooth',block:'center'}),20);return true}}
+   if(el.matches('.v837ChangeBarber')){window.v837ChangeBarber?.();q('v77BookingPicker')?.classList.remove('v838Schedule');q('v77Schedule')?.classList.remove('v838Visible');return true}
+   if(el.matches('.confirmOneTap')){window.confirmBooking?.();return true}
+   return false;
+ }
+ const selector838='.v77Entity,.addonChip,.v77Day,.v77Time,.v837ChangeBarber,.confirmOneTap';
+ function bindSurface838(host){
+   if(!host||host.dataset.v838Bound)return;host.dataset.v838Bound='1';
+   host.querySelectorAll('button').forEach(b=>{if(!b.type)b.type='button'});
+   host.addEventListener('pointerdown',e=>{const el=e.target.closest(selector838);if(!el||!host.contains(el))return;down838={el,x:e.clientX,y:e.clientY,t:performance.now()}},{capture:true,passive:true});
+   host.addEventListener('pointerup',e=>{const el=e.target.closest(selector838);if(!el||!down838||el!==down838.el)return;const moved=Math.hypot(e.clientX-down838.x,e.clientY-down838.y)>12,slow=performance.now()-down838.t>900;down838=null;if(moved||slow)return;e.preventDefault();e.stopImmediatePropagation();handledAt838=performance.now();activate838(el)},{capture:true,passive:false});
+   host.addEventListener('click',e=>{const el=e.target.closest(selector838);if(!el||!host.contains(el))return;e.preventDefault();e.stopImmediatePropagation();if(performance.now()-handledAt838<650)return;handledAt838=performance.now();activate838(el)},{capture:true});
+ }
+ function bindSalon838(){
+   const host=q('v77SalonPickerModal');if(!host||host.dataset.v838Bound)return;host.dataset.v838Bound='1';let down=null,last=0;
+   const sel='.v77SalonBarber,#v77AnyBarberBtn';
+   const run=el=>{const bid=extractArg838(el,'selectBarberV77');if(bid){window.selectBarberV77(bid);return}if(el.id==='v77AnyBarberBtn')window.chooseAnySalonBarberV77?.()};
+   host.addEventListener('pointerdown',e=>{const el=e.target.closest(sel);if(el)down={el,x:e.clientX,y:e.clientY}},{capture:true,passive:true});
+   host.addEventListener('pointerup',e=>{const el=e.target.closest(sel);if(!down||el!==down.el||Math.hypot(e.clientX-down.x,e.clientY-down.y)>12){down=null;return}down=null;e.preventDefault();e.stopImmediatePropagation();last=performance.now();run(el)},{capture:true,passive:false});
+   host.addEventListener('click',e=>{const el=e.target.closest(sel);if(!el)return;e.preventDefault();e.stopImmediatePropagation();if(performance.now()-last<650)return;run(el)},{capture:true});
+ }
+ function init838(){bindSurface838(q('booking'));bindSalon838();document.documentElement.dataset.halaqiVersion='8.3.8';const f=document.querySelector('.h832MenuFoot');if(f)f.textContent='حلاقي • V8.3.8'}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init838,{once:true});else init838();setTimeout(init838,500);
+})();
+</script>
+
 </body></html>
