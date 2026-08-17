@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d2138">
+<meta name="application-name" content="حلاقي">
+<meta name="apple-mobile-web-app-title" content="حلاقي">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="حلاقي — حجز مواعيد الحلاقة وإدارة الصالون بسهولة.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-180.png">
+<title>حلاقي — V8.2 Final</title>
+<style>
+html,body{margin:0;min-height:100%;background:#071523;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","Geeza Pro",Tahoma,sans-serif}
+#boot{min-height:100dvh;display:grid;place-items:center;padding:24px;text-align:center;box-sizing:border-box}
+#bootCard{width:min(100%,360px);padding:22px;box-sizing:border-box;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:#0d2138}
+#boot b{font-size:20px}#boot p{color:#bdc7d2;line-height:1.7;font-size:13px;margin:9px 0 0}
+</style>
+</head>
+<body>
+<div id="boot"><div id="bootCard"><b>حلاقي</b><p>جارٍ فتح النسخة النهائية…</p></div></div>
+<script>
+(() => {
+  'use strict';
+
+  const SOURCES = [
+    './Halaqi-V7.7.html',
+    'https://raw.githubusercontent.com/Givenmoment/halaqi/main/Halaqi-V7.7.html',
+    'https://cdn.jsdelivr.net/gh/Givenmoment/halaqi@main/Halaqi-V7.7.html'
+  ];
+
+  const FINAL_CSS = `
+/* ===== Halaqi V8.2 Final ===== */
+
+/* V8.1: eliminate iOS/native button paint leaking behind barber names. */
+.barberCard button.ownerLink,
+.barberCard .ownerLink{
+  -webkit-appearance:none!important;
+  appearance:none!important;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  color:var(--text)!important;
+  text-align:start!important;
+  font:inherit!important;
+  border-radius:0!important;
+}
+.barberCard .ownerLink h3{
+  color:var(--text)!important;
+  background:transparent!important;
+  opacity:1!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+body.dark .barberCard button.ownerLink,
+body.dark .barberCard .ownerLink,
+body.dark .barberCard .ownerLink h3,
+body.dark .v77EntityName,
+body.dark .v77SalonBarberName,
+body.dark .teamMember b{
+  color:#f7f3ea!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  -webkit-text-fill-color:#f7f3ea!important;
+}
+body.dark .barberCard .badge.sponsored{
+  color:#102033!important;
+  -webkit-text-fill-color:#102033!important;
+}
+
+html,body{max-width:100%;overflow-x:hidden}
+.barberCard,.barberCard>div,.ownerLink,.ownerLink h3{min-width:0}
+.screen{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+.footerDev{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}
+
+/* 12-hour booking clock */
+.v77Time{direction:rtl!important;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* Optional quarter/half-hour editor; compact and separate from normal booking. */
+#mawExtraSlots{margin-top:10px}
+.mawExtraIntro{color:var(--muted);font-size:12px!important;line-height:1.65;margin:5px 0 10px}
+.mawExtraEditor{display:grid;grid-template-columns:1fr 1fr .8fr auto;gap:7px;align-items:end}
+.mawExtraEditor select{min-width:0}
+.mawExtraList{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.mawExtraChip{min-height:38px!important;padding:7px 10px!important}
+@media(max-width:390px){
+  .mawExtraEditor{grid-template-columns:1fr 1fr .8fr}
+  .mawExtraEditor button{grid-column:1/-1;width:100%}
+}
+`;
+
+  const FINAL_JS = `
+(() => {
+  'use strict';
+  document.documentElement.dataset.halaqiFinal='8.2-final';
+
+  const SLOT_KEY='halaqi_extra_slots_v82';
+  const LEGACY_SLOT_KEYS=['mawidi_extra_slots_v82'];
+  const DEFAULT_TIMES=['10:00','11:00','12:00','13:00','16:00','17:00','18:00','19:00','20:00'];
+  const byId=id=>document.getElementById(id);
+  const isEnglish=()=>document.documentElement.lang==='en';
+
+  function format12(value){
+    const m=/^(\\\\d{1,2}):(\\\\d{2})$/.exec(String(value||''));
+    if(!m) return String(value||'');
+    let h=Number(m[1]); const min=m[2], pm=h>=12;
+    h=h%12||12;
+    return isEnglish()
+      ? h+':'+min+' '+(pm?'PM':'AM')
+      : h+':'+min+' '+(pm?'م':'ص');
+  }
+
+  function isLeakText(value){
+    const compact=(value||'').replace(/\\\\s+/g,'');
+    if(!compact || compact.length>80) return false;
+    const rest=compact.replace(/\\\\\\\\[nrt]/gi,'').replace(/[nrt\\\\\\\\/]+/gi,'');
+    return rest==='' && /\\\\\\\\[nrt]|\\\\\\\\/.test(compact);
+  }
+
+  function scrubLeakedText(){
+    if(!document.body) return 0;
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const remove=[];
+    while(walker.nextNode()){
+      const n=walker.currentNode,p=n.parentElement;
+      if(!p || ['SCRIPT','STYLE','TEXTAREA','OPTION','NOSCRIPT','PRE','CODE'].includes(p.tagName)) continue;
+      const raw=(n.nodeValue||'').trim();
+      if(raw==='\\\\\\\\' || isLeakText(raw)) remove.push(n);
+    }
+    remove.forEach(n=>n.remove());
+    return remove.length;
+  }
+
+  function enforceNativeButtonReset(){
+    document.querySelectorAll('.barberCard button.ownerLink').forEach(btn=>{
+      btn.style.setProperty('-webkit-appearance','none','important');
+      btn.style.setProperty('appearance','none','important');
+      btn.style.setProperty('background','transparent','important');
+      btn.style.setProperty('background-color','transparent','important');
+      btn.style.setProperty('border','0','important');
+      btn.style.setProperty('box-shadow','none','important');
+    });
+  }
+
+  function readExtraMap(){
+    try{
+      const current=localStorage.getItem(SLOT_KEY);
+      if(current) return JSON.parse(current)||{};
+      for(const key of LEGACY_SLOT_KEYS){
+        const legacy=localStorage.getItem(key);
+        if(legacy){
+          const parsed=JSON.parse(legacy)||{};
+          try{localStorage.setItem(SLOT_KEY,JSON.stringify(parsed))}catch{}
+          return parsed;
+        }
+      }
+      return {};
+    }catch{return {}}
+  }
+  function writeExtraMap(map){
+    try{localStorage.setItem(SLOT_KEY,JSON.stringify(map))}catch{}
+  }
+  function selectedBookingBarber(){
+    return byId('bookingBarber')?.value||'';
+  }
+  function activeBarber(){
+    try{return currentBarber()?.id||currentBarberId||''}
+    catch{return (typeof currentBarberId!=='undefined'?currentBarberId:'')||''}
+  }
+  function extraTimes(id){
+    const map=readExtraMap();
+    return (map[id]||[]).filter(v=>/^\\\\d{2}:\\\\d{2}$/.test(v));
+  }
+  function allTimes(id){
+    return [...new Set([...DEFAULT_TIMES,...extraTimes(id)])].sort((a,b)=>a.localeCompare(b));
+  }
+
+  function renderSchedule12(){
+    const daySel=byId('bookingDay'),timeSel=byId('bookingTime'),
+          daysEl=byId('v77Days'),timesEl=byId('v77Times');
+    if(!daySel||!timeSel||!daysEl||!timesEl) return;
+
+    const barberId=selectedBookingBarber();
+    const times=allTimes(barberId);
+    const current=timeSel.value;
+    timeSel.innerHTML=times.map(t=>'<option value="'+t+'">'+format12(t)+'</option>').join('');
+    timeSel.value=times.includes(current)?current:(times[0]||'10:00');
+
+    if(!daySel.value && daySel.options[0]) daySel.value=daySel.options[0].value;
+    const fmt=new Intl.DateTimeFormat(isEnglish()?'en-IQ':'ar-IQ',{weekday:'short',day:'numeric',month:'short'});
+    const today=new Date(); today.setHours(0,0,0,0);
+
+    daysEl.innerHTML=[...daySel.options].map(o=>{
+      const d=new Date(o.value+'T12:00:00');
+      const delta=Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate())-today)/86400000);
+      const label=delta===0?(isEnglish()?'Today':'اليوم')
+                 :delta===1?(isEnglish()?'Tomorrow':'غداً')
+                 :fmt.format(d).split('،')[0];
+      return '<button class="v77Day '+(daySel.value===o.value?'active':'')+'" onclick="chooseDayV77(\\''+o.value+'\\')"><b>'+label+'</b><small>'+fmt.format(d)+'</small></button>';
+    }).join('');
+
+    let booked=new Set();
+    try{
+      const b=barbers.find(x=>x.id===barberId), day=daySel.value;
+      booked=new Set(bookings.filter(x=>x.barberId===b?.id&&x.day===day).map(x=>x.time));
+    }catch{}
+
+    timesEl.innerHTML=[...timeSel.options].map(o=>
+      '<button class="v77Time '+(timeSel.value===o.value?'active':'')+'" '+(booked.has(o.value)?'disabled':'')+
+      ' onclick="chooseTimeV77(\\''+o.value+'\\')">'+format12(o.value)+'</button>'
+    ).join('');
+
+    const free=[...timeSel.options].filter(o=>!booked.has(o.value));
+    if(!free.length){
+      timesEl.innerHTML='<div class="v77NoSlots">'+
+        (isEnglish()?'This day is full. Choose another day.':'هذا اليوم ممتلئ. اختر يوماً آخر.')+
+        '</div>';
+    }else if(booked.has(timeSel.value)){
+      timeSel.value=free[0].value;
+      setTimeout(renderSchedule12,0);
+    }
+    const hint=byId('v77SlotsHint');
+    if(hint) hint.textContent=barberId ? (free.length+' '+(isEnglish()?'available':'وقت متاح')) : '';
+  }
+
+  // Override V7.7's function that reintroduced automatic :30 slots.
+  window.renderScheduleButtonsV77=renderSchedule12;
+
+  function renderExtraList(){
+    const box=byId('mawExtraList'); if(!box) return;
+    const id=activeBarber(), arr=extraTimes(id);
+    box.innerHTML=arr.length
+      ? arr.map(t=>'<button type="button" class="chip mawExtraChip" onclick="mawRemoveExtraSlot(\\''+t+'\\')">'+format12(t)+' ×</button>').join('')
+      : '<small style="color:var(--muted)">لا توجد أوقات إضافية.</small>';
+  }
+
+  function ensureExtraEditor(){
+    const screen=byId('barberSchedule');
+    if(!screen || byId('mawExtraSlots')) return;
+    const first=screen.querySelector('.formCard');
+    if(!first) return;
+
+    const card=document.createElement('div');
+    card.id='mawExtraSlots';
+    card.className='formCard';
+    card.innerHTML=
+      '<h3>أوقات إضافية اختيارية</h3>'+
+      '<p class="mawExtraIntro">المواعيد الأساسية تبقى بالساعات الكاملة. عند الحاجة يمكنك إضافة ربع أو نصف ساعة يدوياً.</p>'+
+      '<div class="mawExtraEditor">'+
+        '<div><label>الساعة</label><select id="mawExtraHour">'+
+          Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'">'+(i+1)+'</option>').join('')+
+        '</select></div>'+
+        '<div><label>الدقائق</label><select id="mawExtraMinute">'+
+          '<option value="15">15</option><option value="30" selected>30</option><option value="45">45</option>'+
+        '</select></div>'+
+        '<div><label>الفترة</label><select id="mawExtraPeriod"><option value="am">ص</option><option value="pm">م</option></select></div>'+
+        '<button class="secondary" type="button" onclick="mawAddExtraSlot()">إضافة</button>'+
+      '</div><div id="mawExtraList" class="mawExtraList"></div>';
+    first.insertAdjacentElement('afterend',card);
+    renderExtraList();
+  }
+
+  window.mawAddExtraSlot=function(){
+    const id=activeBarber();
+    if(!id) return;
+    let h=Number(byId('mawExtraHour')?.value||10);
+    const min=Number(byId('mawExtraMinute')?.value||30);
+    const period=byId('mawExtraPeriod')?.value||'am';
+    if(period==='pm' && h!==12) h+=12;
+    if(period==='am' && h===12) h=0;
+    const value=String(h).padStart(2,'0')+':'+String(min).padStart(2,'0');
+    const map=readExtraMap();
+    map[id]=[...new Set([...(map[id]||[]),value])].sort();
+    writeExtraMap(map);
+    renderExtraList();
+    try{toast('تمت إضافة الوقت '+format12(value))}catch{}
+  };
+
+  window.mawRemoveExtraSlot=function(value){
+    const id=activeBarber(),map=readExtraMap();
+    map[id]=(map[id]||[]).filter(x=>x!==value);
+    writeExtraMap(map);
+    renderExtraList();
+    try{toast('تم حذف الوقت الإضافي')}catch{}
+  };
+
+  function replaceVisibleClockText(){
+    if(!document.body) return;
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const changes=[];
+    while(walker.nextNode()){
+      const n=walker.currentNode,p=n.parentElement;
+      if(!p || ['SCRIPT','STYLE','TEXTAREA','OPTION','NOSCRIPT','PRE','CODE'].includes(p.tagName)) continue;
+      const s=n.nodeValue||'';
+      const next=s.replace(/\\b([01]?\\d|2[0-3]):([0-5]\\d)\\b(?!\\s*(?:ص|م|AM|PM))/g,(all,h,m)=>format12(String(h).padStart(2,'0')+':'+m));
+      if(next!==s) changes.push([n,next]);
+    }
+    changes.forEach(([n,v])=>n.nodeValue=v);
+  }
+
+  function qaAudit(){
+    scrubLeakedText();
+    enforceNativeButtonReset();
+    ensureExtraEditor();
+    replaceVisibleClockText();
+
+    // Booking renderer may be rebuilt by the underlying app.
+    if(byId('v77Times') && byId('bookingTime')) {
+      try{renderSchedule12()}catch(e){console.warn('[Halaqi V8.2] time renderer',e)}
+    }
+
+    const ids=[...document.querySelectorAll('[id]')].map(el=>el.id).filter(Boolean);
+    const dup=[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))];
+    if(dup.length) console.warn('[Halaqi QA] duplicate ids:',dup);
+  }
+
+  let queued=false;
+  function queueAudit(){
+    if(queued) return;
+    queued=true;
+    requestAnimationFrame(()=>{queued=false;qaAudit()});
+  }
+
+  function start(){
+    qaAudit();
+    setTimeout(qaAudit,120);
+    setTimeout(qaAudit,700);
+
+    // Proper hosted PWA registration.
+    if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+      navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(err=>console.warn('[Halaqi SW]',err));
+    }
+
+    const obs=new MutationObserver(muts=>{
+      if(muts.some(m=>m.type==='childList' || m.type==='attributes')) queueAudit();
+    });
+    obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','data-theme']});
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+})();
+`;
+
+  function injectBeforeClosing(html, tag, addition){
+    const needle='</'+tag+'>';
+    const lower=html.toLowerCase();
+    const idx=lower.lastIndexOf(needle);
+    if(idx<0) return html+addition;
+    return html.slice(0,idx)+addition+'\\n'+html.slice(idx);
+  }
+
+  function repairKnownSourceDefects(html){
+    // Remove known escaped-newline / bare-backslash debris only between tags.
+    html=html.replace(/(<\/script>)\s*\\\\n\s*(<style\s+id=["']halaqi-v77-css["'])/i,'$1\\n$2');
+    html=html.replace(/>\s*(?:\\\\[nrt]\s*)+\s*</gi,'>\\n<');
+    html=html.replace(/>\s*\\\\\s*</g,'>\\n<');
+    return html;
+  }
+
+  function injectPatch(html){
+    const cssTag='<style id="halaqi-v82-final-css">'+FINAL_CSS+'</style>';
+    const pwaHead=
+      '<meta name="application-name" content="حلاقي">'+
+      '<meta name="apple-mobile-web-app-title" content="حلاقي">'+
+      '<meta name="mobile-web-app-capable" content="yes">'+
+      '<link rel="manifest" href="./manifest.webmanifest">'+
+      '<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">'+
+      '<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-180.png">';
+    const closeScript='<'+'/script>';
+    const jsTag='<script id="halaqi-v82-final-js">'+FINAL_JS+closeScript;
+
+    let out=repairKnownSourceDefects(html);
+    out=out.split('موعدي').join('حلاقي');
+    out=out.split('Mawidi').join('Halaqi');
+    out=injectBeforeClosing(out,'head',pwaHead+cssTag);
+    out=injectBeforeClosing(out,'body',jsTag);
+    return out;
+  }
+
+  async function loadSource(){
+    let lastError=null;
+    for(const url of SOURCES){
+      try{
+        const r=await fetch(url,{cache:'no-store'});
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        const text=await r.text();
+        if(!/<html[\s>]/i.test(text) || !/<body[\s>]/i.test(text)) throw new Error('Invalid source document');
+        return text;
+      }catch(err){lastError=err}
+    }
+    throw lastError||new Error('Source unavailable');
+  }
+
+  if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+    navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
+  }
+
+  loadSource()
+    .then(source=>{
+      document.open();
+      document.write(injectPatch(source));
+      document.close();
+    })
+    .catch(err=>{
+      const card=document.getElementById('bootCard');
+      if(card) card.innerHTML='<b>تعذر فتح النسخة</b><p>تحقق من اتصال الإنترنت ثم أعد فتح التطبيق.<br><small>'+String(err.message||err)+'</small></p>';
+      console.error('[Halaqi V8.2]',err);
+    });
+})();
+</script>
+</body>
+</html>
