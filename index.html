@@ -5627,7 +5627,7 @@ body.dark .h832Topbar{background:rgba(13,26,42,.97)!important;border-bottom-colo
 (()=>{
  'use strict';
  const byId=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
- document.documentElement.dataset.halaqiVersion='8.3.5';
+ document.documentElement.dataset.halaqiVersion='8.3.4';
  const validCoord=e=>Number.isFinite(Number(e?.lat))&&Number.isFinite(Number(e?.lng))&&Math.abs(Number(e.lat))<=90&&Math.abs(Number(e.lng))<=180&&!(Number(e.lat)===0&&Number(e.lng)===0);
  const esc833=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  const hash833=async v=>{if(window.crypto?.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}return 'local-'+btoa(unescape(encodeURIComponent(v))).slice(0,80)};
@@ -5664,7 +5664,7 @@ body.dark .h832Topbar{background:rgba(13,26,42,.97)!important;border-bottom-colo
  };
  function cleanSideMenu833(){
    const mapLabel=document.querySelector('[data-h832-m3]');mapLabel?.closest('button')?.remove();
-   const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.3.5';
+   const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.3.4';
  }
 
  // -------- Linked barbers inherit salon coordinates and never need their own map point --------
@@ -5791,188 +5791,79 @@ body.dark .h832Topbar{background:rgba(13,26,42,.97)!important;border-bottom-colo
 </script>
 
 
-<style id="halaqi-v834-touchfix-css">
-/* V8.3.4 — hard touch/navigation stability layer */
-.swipePhysicsPreview,.swipePhysicsShade{display:none!important;pointer-events:none!important}
-.screen:not(.active){pointer-events:none!important}
-.screen.active{pointer-events:auto!important;touch-action:pan-y!important}
+
+<style id="halaqi-v836-booking-rootfix-css">
+/* V8.3.6 — root interaction model: native taps, no global gesture/capture guards. */
+.screen:not(.active){display:none!important;pointer-events:none!important}
+.screen.active{display:block!important;pointer-events:auto!important;touch-action:auto!important}
+.screen.active button,.screen.active a,.screen.active input,.screen.active select,.screen.active textarea,.screen.active [onclick]{pointer-events:auto!important}
+#bottomNav,#bottomNav button,.h832Topbar,.h832Topbar button,.h832QuickDock,.h832QuickDock button{pointer-events:auto!important}
 .h832MenuShade:not(.show),.h832Menu:not(.show){pointer-events:none!important}
 .h832MenuShade.show,.h832Menu.show{pointer-events:auto!important}
 .modal:not(.show){pointer-events:none!important}
-#bottomNav,.h832Topbar,.h832QuickDock{pointer-events:auto!important}
-body.h834InteractiveReady .screen.active button,
-body.h834InteractiveReady .screen.active input,
-body.h834InteractiveReady .screen.active select,
-body.h834InteractiveReady .screen.active textarea,
-body.h834InteractiveReady .screen.active a{pointer-events:auto!important}
+.modal.show{pointer-events:auto!important}
+#halaqiSplash.halaqiSplashExit{pointer-events:none!important}
+.swipePhysicsPreview,.swipePhysicsShade{display:none!important;pointer-events:none!important}
 </style>
-<script id="halaqi-v834-touchfix-js">
+<script id="halaqi-v836-booking-rootfix-js">
 (()=>{
  'use strict';
- const q=s=>document.querySelector(s), qa=s=>[...document.querySelectorAll(s)];
- function clearSwipeLock834(){
-   cancelAnimationFrame(window.__halaqiSwipeFrame834||0);
+ const one=s=>document.querySelector(s), all=s=>[...document.querySelectorAll(s)];
+ function clearRetiredGestureState836(){
    document.documentElement.classList.remove('swipePhysicsLock','swipePhysicsCommitting');
    document.body.classList.remove('swipePhysicsActive');
-   qa('.swipePhysicsPreview,.swipePhysicsShade').forEach(el=>el.remove());
-   qa('.swipePhysicsCurrent').forEach(el=>{
-     el.classList.remove('swipePhysicsCurrent');
-     el.style.transform='';el.style.borderRadius='';el.style.boxShadow='';el.style.willChange='';
-   });
+   all('.swipePhysicsPreview,.swipePhysicsShade').forEach(el=>el.remove());
+   all('.swipePhysicsCurrent').forEach(el=>{el.classList.remove('swipePhysicsCurrent');el.style.transform='';el.style.borderRadius='';el.style.boxShadow='';el.style.willChange=''});
    const b=document.body;
-   // These inline properties were written only by the retired swipe/menu lock systems.
    if(b.style.touchAction==='none')b.style.touchAction='';
    if(b.style.position==='fixed')b.style.position='';
-   if(/^-/i.test(b.style.top||''))b.style.top='';
+   if(b.style.overflow==='hidden'&&!one('.modal.show')&&!one('#h832Menu.show'))b.style.overflow='';
+   if(b.style.top&&/^-/i.test(b.style.top))b.style.top='';
    if(b.style.left==='0px'||b.style.left==='0')b.style.left='';
    if(b.style.right==='0px'||b.style.right==='0')b.style.right='';
    if(b.style.width==='100%')b.style.width='';
-   if(b.style.overflow==='hidden')b.style.overflow='';
  }
- function closeNavigationLayers834(){
-   const menu=q('#h832Menu'),shade=q('#h832MenuShade');
-   menu?.classList.remove('show');shade?.classList.remove('show');
-   shade?.setAttribute('aria-hidden','true');
-   document.body.classList.remove('h833MenuOpen');
- }
- function normalizeInteraction834(){
-   clearSwipeLock834();closeNavigationLayers834();
-   qa('.screen').forEach(el=>{el.style.pointerEvents=el.classList.contains('active')?'auto':'none'});
-   document.body.classList.add('h834InteractiveReady');
- }
- const previousShow834=window.showScreen;
- if(typeof previousShow834==='function'){
-   window.showScreen=function(id,push=true){
-     // Navigation should never leave a modal/menu/gesture surface over the next screen.
-     qa('.modal.show').forEach(m=>m.classList.remove('show'));
-     normalizeInteraction834();
-     const result=previousShow834.apply(this,arguments);
-     normalizeInteraction834();
-     requestAnimationFrame(()=>{normalizeInteraction834();window.scrollTo({top:0,left:0,behavior:'auto'})});
-     setTimeout(normalizeInteraction834,80);
-     return result;
-   };
- }
- // If iOS restores the page from bfcache while a gesture was in progress, repair it immediately.
- window.addEventListener('pageshow',normalizeInteraction834,{passive:true});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)normalizeInteraction834()},{passive:true});
- window.addEventListener('orientationchange',()=>setTimeout(normalizeInteraction834,80),{passive:true});
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalizeInteraction834,{once:true});
- else normalizeInteraction834();
- setTimeout(normalizeInteraction834,250);setTimeout(normalizeInteraction834,1200);
- document.documentElement.dataset.halaqiVersion='8.3.5';
-})();
-</script>
-
-
-<style id="halaqi-v835-interaction-guard-css">
-/* V8.3.5 — iOS interaction guard: normal UI always stays tappable. */
-#bottomNav{z-index:6000!important;pointer-events:auto!important;touch-action:manipulation!important}
-#bottomNav button{pointer-events:auto!important;touch-action:manipulation!important;position:relative!important;z-index:1!important}
-.h832Topbar{z-index:6100!important;pointer-events:auto!important}
-.h832QuickDock{z-index:6050!important;pointer-events:auto!important}
-.h832MenuShade{z-index:8000!important}.h832Menu{z-index:8001!important}
-.modal{z-index:9000!important}.onboardingModal{z-index:9100!important}
-.toast,.techToast{z-index:10000!important}
-.screen.active{pointer-events:auto!important;touch-action:pan-y pinch-zoom!important;position:relative!important;z-index:1!important}
-.screen.active button,.screen.active input,.screen.active select,.screen.active textarea,.screen.active a,.screen.active [onclick]{pointer-events:auto!important;touch-action:manipulation!important}
-.screen:not(.active){pointer-events:none!important}
-.h832MenuShade:not(.show),.h832Menu:not(.show),.modal:not(.show),#halaqiSplash.halaqiSplashExit{pointer-events:none!important}
-</style>
-<script id="halaqi-v835-interaction-guard-js">
-(()=>{
- 'use strict';
- const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
- const num=v=>Number.parseFloat(v)||0;
- function visible835(el){
-   if(!el||!el.isConnected)return false;
-   const cs=getComputedStyle(el);
-   return cs.display!=='none'&&cs.visibility!=='hidden'&&num(cs.opacity)>.02;
- }
- function fullViewportBlocker835(el){
-   if(!el||el===document.body||el===document.documentElement)return false;
-   const cs=getComputedStyle(el),r=el.getBoundingClientRect();
-   if(cs.position!=='fixed')return false;
-   const vw=Math.max(1,innerWidth),vh=Math.max(1,innerHeight);
-   return r.width>=vw*.82&&r.height>=vh*.72&&r.left<=vw*.12&&r.top<=vh*.14&&num(cs.zIndex)>=35;
- }
- function legitimate835(el){
-   if(!el)return false;
-   if(el.closest?.('#bottomNav,.h832Topbar,.h832QuickDock'))return true;
-   const modal=el.closest?.('.modal');
-   if(modal?.classList.contains('show')&&visible835(modal)&&visible835(modal.querySelector('.modalCard')))return true;
-   const menu=el.closest?.('#h832Menu');
-   if(menu?.classList.contains('show')&&visible835(menu))return true;
-   const shade=el.closest?.('#h832MenuShade');
-   if(shade?.classList.contains('show')&&$('#h832Menu')?.classList.contains('show'))return true;
-   const splash=el.closest?.('#halaqiSplash');
-   if(splash&&!splash.classList.contains('halaqiSplashExit')&&visible835(splash))return true;
-   return false;
- }
- function neutralize835(el){
-   if(!el||legitimate835(el))return false;
-   if(el.matches?.('.h832MenuShade,.h832Menu,.modal'))el.classList.remove('show');
-   if(el.id==='halaqiSplash')el.classList.add('halaqiSplashExit');
-   el.style.setProperty('pointer-events','none','important');
-   if(fullViewportBlocker835(el))el.setAttribute('data-h835-neutralized','1');
-   return true;
- }
- function repairKnown835(){
-   const menu=$('#h832Menu'),shade=$('#h832MenuShade');
-   if(!(menu?.classList.contains('show')&&visible835(menu))){
-     menu?.classList.remove('show');shade?.classList.remove('show');
-     document.body.classList.remove('h833MenuOpen');
-   }
-   $$('.modal').forEach(m=>{if(!m.classList.contains('show'))m.style.setProperty('pointer-events','none','important')});
-   $$('.swipePhysicsPreview,.swipePhysicsShade').forEach(x=>x.remove());
-   document.documentElement.classList.remove('swipePhysicsLock','swipePhysicsCommitting');
-   document.body.classList.remove('swipePhysicsActive');
-   if(document.body.style.touchAction==='none')document.body.style.touchAction='';
-   if(document.body.style.position==='fixed')document.body.style.position='';
-   if(document.body.style.overflow==='hidden'&&!$('.modal.show')&&!$('#h832Menu.show'))document.body.style.overflow='';
-   $$('.screen').forEach(sc=>sc.style.pointerEvents=sc.classList.contains('active')?'auto':'none');
-   const nav=$('#bottomNav');if(nav){nav.style.setProperty('pointer-events','auto','important');nav.querySelectorAll('button').forEach(b=>b.style.setProperty('pointer-events','auto','important'))}
- }
- function sweep835(){
-   repairKnown835();
-   const nav=$('#bottomNav');
-   if(!nav)return;
-   // Any invisible full-screen fixed layer above the nav is stale unless it is an intentionally open menu/modal.
-   $$('body *').forEach(el=>{
-     if(!fullViewportBlocker835(el)||legitimate835(el))return;
-     const cs=getComputedStyle(el);
-     if(cs.pointerEvents==='none')return;
-     const isKnown=el.matches?.('.h832MenuShade,.h832Menu,.modal,#halaqiSplash,.swipePhysicsPreview,.swipePhysicsShade');
-     const visuallyAbsent=!visible835(el)||num(cs.opacity)<.08;
-     if(isKnown||visuallyAbsent)neutralize835(el);
+ function closeDeadLayers836(){
+   const menu=one('#h832Menu'),shade=one('#h832MenuShade');
+   if(!menu?.classList.contains('show')){menu?.classList.remove('show');shade?.classList.remove('show');document.body.classList.remove('h833MenuOpen')}
+   all('.modal').forEach(m=>{
+     // Remove only inline pointer locks left by the retired V8.3.5 guard; CSS controls state now.
+     if(m.style.getPropertyValue('pointer-events'))m.style.removeProperty('pointer-events');
    });
  }
- // Capturing happens even when a transparent overlay is the event target.
- function rescueEvent835(e){
-   const t=e.target instanceof Element?e.target:null;
-   if(!t)return;
-   let blocker=t;
-   while(blocker&&blocker!==document.body&&!fullViewportBlocker835(blocker))blocker=blocker.parentElement;
-   if(blocker&&fullViewportBlocker835(blocker)&&!legitimate835(blocker)){
-     const x=('clientX' in e)?e.clientX:(e.touches?.[0]?.clientX||0),y=('clientY' in e)?e.clientY:(e.touches?.[0]?.clientY||0);
-     neutralize835(blocker);repairKnown835();
-     const under=document.elementFromPoint(x,y);
-     const clicker=under?.closest?.('button,a,[onclick],input,select,textarea');
-     if(e.type==='click'&&clicker&&clicker!==blocker){e.preventDefault();e.stopImmediatePropagation();clicker.click()}
-   }
+ function normalize836(){
+   clearRetiredGestureState836();closeDeadLayers836();
+   all('.screen').forEach(sc=>{sc.style.removeProperty('pointer-events')});
+   const nav=one('#bottomNav');if(nav){nav.style.removeProperty('pointer-events');nav.querySelectorAll('button').forEach(b=>b.style.removeProperty('pointer-events'))}
  }
- document.addEventListener('pointerdown',rescueEvent835,true);
- document.addEventListener('touchstart',rescueEvent835,{capture:true,passive:true});
- document.addEventListener('click',rescueEvent835,true);
- const oldShow=window.showScreen;
- if(typeof oldShow==='function')window.showScreen=function(){sweep835();const r=oldShow.apply(this,arguments);sweep835();requestAnimationFrame(sweep835);setTimeout(sweep835,40);setTimeout(sweep835,180);return r};
- const oldOpen=window.openBooking;
- if(typeof oldOpen==='function')window.openBooking=function(){sweep835();const r=oldOpen.apply(this,arguments);sweep835();setTimeout(sweep835,50);return r};
- ['pageshow','focus','orientationchange','resize'].forEach(ev=>addEventListener(ev,()=>setTimeout(sweep835,30),{passive:true}));
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(sweep835,20)},{passive:true});
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sweep835,{once:true});else sweep835();
- setTimeout(sweep835,250);setTimeout(sweep835,900);setInterval(sweep835,1200);
- document.documentElement.dataset.halaqiVersion='8.3.5';
+ normalize836();
+ const previousOpen836=window.openBooking;
+ if(typeof previousOpen836==='function'){
+   window.openBooking=function(){
+     normalize836();
+     // A booking transition must never inherit an open menu/modal.
+     all('.modal.show').forEach(m=>m.classList.remove('show'));
+     one('#h832Menu')?.classList.remove('show');one('#h832MenuShade')?.classList.remove('show');document.body.classList.remove('h833MenuOpen');
+     const r=previousOpen836.apply(this,arguments);
+     normalize836();
+     requestAnimationFrame(()=>{
+       normalize836();
+       const booking=one('#booking');if(booking?.classList.contains('active'))booking.style.removeProperty('pointer-events');
+       const nav=one('#bottomNav');if(nav)nav.style.removeProperty('pointer-events');
+     });
+     return r;
+   };
+ }
+ // Keep ordinary screen navigation clean, but do not intercept pointer/touch/click events globally.
+ const previousShow836=window.showScreen;
+ if(typeof previousShow836==='function'){
+   window.showScreen=function(){
+     normalize836();const r=previousShow836.apply(this,arguments);normalize836();return r;
+   };
+ }
+ document.documentElement.dataset.halaqiVersion='8.3.6';
+ const foot=document.querySelector('.h832MenuFoot');if(foot)foot.textContent='حلاقي • V8.3.6';
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalize836,{once:true});
 })();
 </script>
 
