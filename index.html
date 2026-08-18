@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-halaqi-build="8.3.2.3-rootfix">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -567,7 +567,6 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(max-width:390px){.h83Person,.h83PayoutGrid{grid-template-columns:1fr}.h83PayoutGrid .full,.h83Person label{grid-column:1}.h83RealMap{min-height:280px}.h83GroupHead{align-items:flex-start}.h83Counter button{width:36px;height:36px}}
 </style>
 
-<meta name="halaqi-build" content="8.3.2.2-root-fix">
 </head>
 <body>
 <div id="halaqiSplash" role="status" aria-label="جار فتح تطبيق حلاقي">
@@ -1259,7 +1258,7 @@ function persistAll(){save('halaqi_users',users);save('halaqi_barbers',barbers);
 function showScreen(id,push=true){
  const cur=$('.screen.active'); if(push&&cur&&cur.id!==id){let h=LS('halaqi_history',[]);h.push(cur.id);save('halaqi_history',h.slice(-20))}
  const swap=()=>{$$('.screen').forEach(s=>s.classList.toggle('active',s.id===id));updateNavActive(id)};
- swap();
+ if(document.startViewTransition){try{document.startViewTransition(swap)}catch(e){swap()}}else swap();
  track('screen:'+id);window.scrollTo({top:0,behavior:'smooth'});
  if(push&&id!==homeForRole())showSwipeHint();
  if(id==='smartMatch')setTimeout(renderSmartMatch,20);
@@ -1273,7 +1272,7 @@ function openCurrentAccount(){
  else if(currentRole==='salon')showScreen('salonAccount');
  else showScreen('developerAccount');
 }
-{const __r=$('#roleBtn');if(__r)__r.onclick=openCurrentAccount;}
+if($('#roleBtn')) $('#roleBtn').onclick=openCurrentAccount;
 
 // Edge swipe back: RTL = right edge -> left, LTR = left edge -> right.
 let swipeStartX=0,swipeStartY=0,swipeTracking=false;
@@ -2017,7 +2016,7 @@ function applyLanguage(){
  v66Translating=true;
  document.documentElement.lang=lang;document.documentElement.dir=lang==='en'?'ltr':'rtl';
  const ls=$('#langSwitch');if(ls)ls.classList.toggle('on',lang==='en');
- {const __bt=$('#brandTitle'),__bs=$('#brandSub');if(__bt)__bt.textContent=d.brand;if(__bs)__bs.textContent=d.sub;}
+ if($('#brandTitle')) $('#brandTitle').textContent=d.brand;if($('#brandSub')) $('#brandSub').textContent=d.sub;
  $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(d[k])el.innerHTML=d[k]});
  rememberArabicSource();renderLanguage(lang);updateSwipeGuide();
  const ib=$('#installAppBtn');if(ib)ib.textContent=lang==='en'?'Install Halaqi':'تثبيت حلاقي';
@@ -2842,7 +2841,7 @@ body.dark .travelRec{background:var(--surface)}body.dark .travelRec b{color:#fff
    const rh=q('relationshipHub');if(rh)rh.classList.add('hidden')
  }
  window.openTravelBooking=function(){
-   selectedServices=['full'];simpleBooking=true;showScreen('booking');renderBookingBarbers(false);setBookingDetails(false);renderServices();if(window.ensureBookingRelationship)ensureBookingRelationship();
+   selectedServices=['full'];simpleBooking=true;showScreen('booking');renderBookingBarbers(false);setBookingDetails(false);renderServices();window.ensureBookingRelationship?.();
    const chooser=q('salonChooser');if(chooser?.classList.contains('hidden'))toggleSalonChooser();
    if(window.fillSalonChoices)fillSalonChoices();updateBookingInfo()
  }
@@ -2899,7 +2898,7 @@ body.dark .travelRec{background:var(--surface)}body.dark .travelRec b{color:#fff
  const previousOpen=window.openBooking;
  window.openBooking=function(onlineOnly=false){
    if(!isTravelMode()){previousOpen(onlineOnly);return}
-   selectedServices=['full'];simpleBooking=true;showScreen('booking');renderBookingBarbers(false);setBookingDetails(false);renderServices();if(window.ensureBookingRelationship)ensureBookingRelationship();
+   selectedServices=['full'];simpleBooking=true;showScreen('booking');renderBookingBarbers(false);setBookingDetails(false);renderServices();window.ensureBookingRelationship?.();
    const chooser=q('salonChooser');if(chooser?.classList.contains('hidden'))toggleSalonChooser();fillSalonChoices();renderSalonBarbersForBooking()
  };
 
@@ -5264,9 +5263,9 @@ body.dark .v77Post{box-shadow:0 16px 42px rgba(0,0,0,.24)!important}
    kill.forEach(n=>n.remove());
  }
  function hardenNames(){document.querySelectorAll('.barberCard button.ownerLink,.barberCard .ownerLink').forEach(el=>{el.style.setProperty('background','transparent','important');el.style.setProperty('box-shadow','none','important');el.style.setProperty('border','0','important')})}
- function audit(){scrubLeaks();hardenNames();ensureEditor();if($('v77Times')&&$('bookingTime'))try{renderSchedule12()}catch{}}
+ function audit(){scrubLeaks();hardenNames();ensureEditor()}
  let queued=false;const queue=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;audit()})};
- function start(){audit();setTimeout(audit,120);setTimeout(audit,650);}
+ function start(){audit();setTimeout(audit,120);setTimeout(audit,650);const o=new MutationObserver(ms=>{if(ms.some(m=>m.type==='childList'&&m.addedNodes.length))queue()});o.observe(document.body,{childList:true,subtree:true});}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 
  // Intro: short, deterministic, no network dependency and no artificial wait beyond ~1.4s.
@@ -5275,30 +5274,13 @@ body.dark .v77Post{box-shadow:0 16px 42px rgba(0,0,0,.24)!important}
 })();
 </script>
 
-<script id="halaqi-v82-header-redesign-js">
-(()=>{
-  const syncHeader=()=>{
-    document.querySelectorAll('#brandWordmarkSmart').forEach(el=>el.remove());
-    document.querySelectorAll('.halaqiBrandTextWrap .halaqiBrandSubline,#brandSub').forEach(el=>{
-      el.textContent=document.documentElement.lang==='en'?'Barber appointment booking':'تطبيق حجز مواعيد الحلاقين';
-    });
-    const btn=document.getElementById('roleBtn');
-    const txt=btn?.querySelector('.profileDockText');
-    if(txt) txt.textContent=document.documentElement.lang==='en'?'My account':'حسابي';
-  };
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',syncHeader,{once:true});
-  else syncHeader();
-  setTimeout(syncHeader,120);
-  setTimeout(syncHeader,700);
-  setTimeout(syncHeader,1500);
-})();
-</script>
+<!-- V8.3.2.3: legacy delayed header DOM sync removed; Design 2 owns header state. -->
 
 <script id="halaqi-v83-integrated-js">
 (()=>{
  'use strict';
  const q=id=>document.getElementById(id), en=()=>document.documentElement.lang==='en';
- document.documentElement.dataset.halaqiVersion='8.3-integrated';
+ document.documentElement.dataset.halaqiVersion='8.3.2.3-header-regression-root-fix';
  const safeSave=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn('[Halaqi save]',e)}};
  const safeLoad=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch{return d}};
 
